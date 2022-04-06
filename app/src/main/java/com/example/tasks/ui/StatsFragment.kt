@@ -1,10 +1,11 @@
-package com.example.tasks
+package com.example.tasks.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.tasks.R
 
 class StatsFragment : Fragment() {
     override fun onCreateView(

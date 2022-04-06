@@ -1,4 +1,4 @@
-package com.example.tasks
+package com.example.tasks.data
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -6,6 +6,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import com.example.tasks.data.Task
 
 @Dao
 interface TaskDao {

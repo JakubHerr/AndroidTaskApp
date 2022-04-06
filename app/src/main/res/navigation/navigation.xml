@@ -7,17 +7,17 @@
 
     <fragment
         android:id="@+id/taskListFragment"
-        android:name="com.example.tasks.TaskListFragment"
+        android:name="com.example.tasks.ui.TasksFragment"
         android:label="fragment_task_list"
         tools:layout="@layout/fragment_task_list" />
     <fragment
         android:id="@+id/calendarFragment"
-        android:name="com.example.tasks.CalendarFragment"
+        android:name="com.example.tasks.ui.CalendarFragment"
         android:label="fragment_calendar"
         tools:layout="@layout/fragment_calendar" />
     <fragment
         android:id="@+id/statsFragment"
-        android:name="com.example.tasks.StatsFragment"
+        android:name="com.example.tasks.ui.StatsFragment"
         android:label="fragment_stats"
         tools:layout="@layout/fragment_stats" />
 </navigation>
