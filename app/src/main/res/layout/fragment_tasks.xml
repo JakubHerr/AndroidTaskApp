@@ -11,23 +11,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_margin="16dp"
     tools:context=".ui.TasksFragment">
-
-    <EditText
-        android:id="@+id/task_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:text="@={vm.newTaskName}"
-        android:hint="Enter a task name"
-        android:layout_gravity="center_horizontal"/>
-
-    <Button
-        android:id="@+id/save_button"
-        android:text="save task"
-        android:onClick="@{() -> vm.addTask()}"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tasks_list"
         android:layout_width="match_parent"
