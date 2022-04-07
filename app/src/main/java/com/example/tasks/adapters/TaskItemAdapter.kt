@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tasks.databinding.TaskItemBinding
 import com.example.tasks.data.Task
+import java.text.SimpleDateFormat
 
 class TaskItemAdapter(val clickListener: (id: Long) -> Unit) : ListAdapter<Task, TaskItemAdapter.TaskItemViewHolder>(TaskDiffItemCallback()) {
 
@@ -20,6 +21,7 @@ class TaskItemAdapter(val clickListener: (id: Long) -> Unit) : ListAdapter<Task,
 
     class TaskItemViewHolder(val binding: TaskItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
+        private val sdf = SimpleDateFormat("dd/MM/yyyy")
         companion object{
             fun inflateFrom(parent: ViewGroup) : TaskItemViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
@@ -30,6 +32,10 @@ class TaskItemAdapter(val clickListener: (id: Long) -> Unit) : ListAdapter<Task,
 
         fun bind(task: Task, clickListener: (id: Long) -> Unit) {
             binding.task = task
+            task.date?.let {
+                binding.date.text = sdf.format(it)
+            }
+
             binding.root.setOnClickListener {
                 clickListener(task.taskId)
             }

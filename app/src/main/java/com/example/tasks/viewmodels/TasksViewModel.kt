@@ -1,7 +1,5 @@
 package com.example.tasks.viewmodels
 
-import android.content.Context
-import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,8 +9,6 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 
 class TasksViewModel(val dao: TaskDao) : ViewModel() {
@@ -26,6 +22,7 @@ class TasksViewModel(val dao: TaskDao) : ViewModel() {
         viewModelScope.launch {
             val task = Task()
             task.taskName = newTaskName
+            task.date = date
             dao.insert(task)
         }
     }
@@ -37,13 +34,12 @@ class TasksViewModel(val dao: TaskDao) : ViewModel() {
             .build()
         datePicker.show(fm,"datePicker")
         datePicker.addOnPositiveButtonClickListener {
-            //Toast.makeText(ct,"Date picked: ${Instant.fromEpochMilliseconds(datePicker.selection!!)}",Toast.LENGTH_LONG).show()
             date = datePicker.selection
         }
 
     }
 
-    fun getTime(fm: FragmentManager, ct: Context?) {
+    fun getTime(fm: FragmentManager) {
         val timePicker = MaterialTimePicker.Builder()
             .setTimeFormat(TimeFormat.CLOCK_24H)
             .setHour(12)
@@ -51,7 +47,7 @@ class TasksViewModel(val dao: TaskDao) : ViewModel() {
             .build()
         timePicker.show(fm,"timePicker")
         timePicker.addOnPositiveButtonClickListener {
-            Toast.makeText(ct,"picked: ${timePicker.hour}:${timePicker.minute}",Toast.LENGTH_LONG).show()
+            //TODO add time picking (works only if date is set)
         }
     }
 

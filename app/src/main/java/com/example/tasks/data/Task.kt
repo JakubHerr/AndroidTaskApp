@@ -12,6 +12,9 @@ data class Task (
     @ColumnInfo(name = "task_name")
     var taskName: String = "",
 
+    @ColumnInfo(name = "date")
+    var date: Long? = null,
+
     @ColumnInfo(name = "task_done")
     var taskDone: Boolean = false
 )

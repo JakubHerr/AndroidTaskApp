@@ -1,7 +1,6 @@
 package com.example.tasks.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -38,6 +37,10 @@ class AddTaskFragment : Fragment() {
         binding.saveButton.setOnClickListener {
             viewModel.addTask()
             findNavController().navigate(R.id.action_addTaskFragment_to_tasksFragment)
+        }
+
+        binding.dateBtn.setOnClickListener {
+            viewModel.getDate(childFragmentManager)
         }
 
         return binding.root
