@@ -1,6 +1,7 @@
 package com.example.tasks.viewmodels
 
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tasks.data.Task
@@ -9,21 +10,38 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import kotlinx.coroutines.launch
-import kotlinx.datetime.TimeZone
 
 class TasksViewModel(val dao: TaskDao) : ViewModel() {
     var newTaskName = ""
     var date: Long? = null //Epoch milliseconds
     val tasks = dao.getAll()
-    val tz = TimeZone.currentSystemDefault()
+    var task: MutableLiveData<Task> = MutableLiveData<Task>()
 
     fun addTask() {
         if(newTaskName.isBlank()) newTaskName = "Untitled"
         viewModelScope.launch {
-            val task = Task()
-            task.taskName = newTaskName
-            task.date = date
-            dao.insert(task)
+            dao.insert(Task(taskName = newTaskName, date = date, taskDone = false))
+        }
+    }
+
+    fun deleteTask() {
+        viewModelScope.launch {
+            dao.delete(task.value!!)
+        }
+    }
+
+    fun editTask() {
+        viewModelScope.launch {
+            dao.update(task.value!!)
+        }
+    }
+
+    fun loadTask(id: Long) {
+        viewModelScope.launch {
+            val test = dao.get(id)
+            test?.let {
+                task.value = it
+            }
         }
     }
 

@@ -38,12 +38,19 @@ class TasksFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         //set adapter for recyclerview and create an observer for updating
-        val adapter = TaskItemAdapter{}
+        val adapter = TaskItemAdapter{
+            val directions = TasksFragmentDirections.actionTasksFragmentToEditTaskFragment(it)
+            findNavController().navigate(directions)
+        }
+
         binding.tasksList.adapter = adapter
+
+        //update recyclerView when data changes
         viewModel.tasks.observe(viewLifecycleOwner, Observer { newData ->
             adapter.submitList(newData)
         })
 
+        //navigate to new task UI
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_tasksFragment_to_addTaskFragment)
         }
