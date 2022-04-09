@@ -11,9 +11,9 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import kotlinx.coroutines.launch
 
-class TasksViewModel(val dao: TaskDao) : ViewModel() {
+class TasksViewModel(private val dao: TaskDao) : ViewModel() {
     var newTaskName = ""
-    var date: Long? = null //Epoch milliseconds
+    private var date: Long? = null //Epoch milliseconds
     val tasks = dao.getAll()
     var task: MutableLiveData<Task> = MutableLiveData<Task>()
 
