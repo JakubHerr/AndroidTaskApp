@@ -12,6 +12,7 @@ import com.example.tasks.data.AppDatabase
 import com.example.tasks.databinding.FragmentAddTaskBinding
 import com.example.tasks.viewmodels.TasksViewModel
 import com.example.tasks.viewmodels.TasksViewModelFactory
+import java.text.SimpleDateFormat
 
 class AddTaskFragment : Fragment() {
     private var _binding: FragmentAddTaskBinding? = null
@@ -32,15 +33,26 @@ class AddTaskFragment : Fragment() {
 
         //bind the viewmodel to the layout
         binding.vm = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
-        //add new item and navigate back
-        binding.saveButton.setOnClickListener {
-            viewModel.addTask()
-            findNavController().navigate(R.id.action_addTaskFragment_to_tasksFragment)
+        //set up date picking "databinding"
+        binding.dateBtn.setOnClickListener {
+            viewModel.setDate(childFragmentManager)
         }
 
-        binding.dateBtn.setOnClickListener {
-            viewModel.getDate(childFragmentManager)
+        viewModel.date.observe(viewLifecycleOwner) {
+            binding.dateBtn.text = getString(R.string.no_date_selected)
+            it?.let {
+                binding.dateBtn.text = SimpleDateFormat("dd/MM/yyyy").format(it)
+            }
+        }
+
+        //navigate back when necessary
+        viewModel.navigateBack.observe(viewLifecycleOwner) {
+            if(it) {
+                viewModel.onNavigateBack()
+                findNavController().navigate(R.id.action_addTaskFragment_to_tasksFragment)
+            }
         }
 
         return binding.root

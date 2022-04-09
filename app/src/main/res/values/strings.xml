@@ -4,6 +4,7 @@
     <string name="calendar">Calendar</string>
     <string name="stats">Stats</string>
     <string name="date_picker_description">Date picker</string>
+    <string name="no_date_selected">No date</string>
     <string name="time_picker_description">Time picker</string>
     <string name="task_name_prompt">Enter a task name</string>
     <string name="add_task_button">add task</string>

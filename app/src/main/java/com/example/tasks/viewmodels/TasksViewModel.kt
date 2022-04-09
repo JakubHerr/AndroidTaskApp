@@ -1,6 +1,7 @@
 package com.example.tasks.viewmodels
 
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,28 +13,43 @@ import com.google.android.material.timepicker.TimeFormat
 import kotlinx.coroutines.launch
 
 class TasksViewModel(private val dao: TaskDao) : ViewModel() {
-    var newTaskName = ""
-    private var date: Long? = null //Epoch milliseconds
-    val tasks = dao.getAll()
-    var task: MutableLiveData<Task> = MutableLiveData<Task>()
+    var newTaskName = "" //holds name for a new task
+
+    val date: LiveData<Long?> get() = _date
+    private val _date = MutableLiveData<Long?>(null) //Epoch milliseconds
+
+    val tasks = dao.getAll() //holds list of all tasks
+
+    var task = MutableLiveData<Task>() //holds task to be edited/deleted
+
+    val navigateBack: LiveData<Boolean> get() = _navigateBack
+    private val _navigateBack = MutableLiveData(false) //tells fragments when to return
+
+    fun onNavigateBack() {
+        _navigateBack.value = false
+    }
 
     fun addTask() {
         if(newTaskName.isBlank()) newTaskName = "Untitled"
         viewModelScope.launch {
-            dao.insert(Task(taskName = newTaskName, date = date, taskDone = false))
+            dao.insert(Task(taskName = newTaskName, date = _date.value, taskDone = false))
         }
+        _navigateBack.value = true
     }
 
     fun deleteTask() {
         viewModelScope.launch {
             dao.delete(task.value!!)
         }
+        _navigateBack.value = true
     }
 
     fun editTask() {
+        task.value?.date = _date.value
         viewModelScope.launch {
             dao.update(task.value!!)
         }
+        _navigateBack.value = true
     }
 
     fun loadTask(id: Long) {
@@ -41,20 +57,23 @@ class TasksViewModel(private val dao: TaskDao) : ViewModel() {
             val test = dao.get(id)
             test?.let {
                 task.value = it
+                _date.value = it.date
             }
         }
     }
 
-    fun getDate(fm: FragmentManager) {
+    fun setDate(fm: FragmentManager) {
         val datePicker = MaterialDatePicker.Builder.datePicker()
             .setTitleText("Choose date")
-            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+            .setSelection(_date.value ?: MaterialDatePicker.todayInUtcMilliseconds())
             .build()
         datePicker.show(fm,"datePicker")
         datePicker.addOnPositiveButtonClickListener {
-            date = datePicker.selection
+            _date.value = datePicker.selection
         }
-
+        datePicker.addOnNegativeButtonClickListener {
+            _date.value = null
+        }
     }
 
     fun getTime(fm: FragmentManager) {
@@ -68,5 +87,4 @@ class TasksViewModel(private val dao: TaskDao) : ViewModel() {
             //TODO add time picking (works only if date is set)
         }
     }
-
 }

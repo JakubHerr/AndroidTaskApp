@@ -20,24 +20,22 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:hint="@string/task_name_prompt"
+            android:text="@={vm.newTaskName}"
+            android:importantForAutofill="no"
             android:inputType="text"
             android:minHeight="48dp"
-            android:text="@={vm.newTaskName}"
             android:textColorHint="#757575"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:importantForAutofill="no" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:onClick="@{() -> vm.addTask()}"
             android:text="@string/add_task_button"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/time_btn"
-            app:layout_constraintTop_toBottomOf="@+id/task_name" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/date_btn" />
 
         <Button
             android:id="@+id/date_btn"
@@ -47,21 +45,7 @@
             android:contentDescription="@string/date_picker_description"
             app:icon="@android:drawable/ic_menu_today"
             app:iconPadding="0dp"
-            app:layout_constraintEnd_toStartOf="@+id/time_btn"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/task_name" />
-
-        <Button
-            android:id="@+id/time_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:contentDescription="@string/time_picker_description"
-            app:icon="@android:drawable/ic_menu_recent_history"
-            app:layout_constraintEnd_toStartOf="@+id/save_button"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/date_btn"
             app:layout_constraintTop_toBottomOf="@+id/task_name" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

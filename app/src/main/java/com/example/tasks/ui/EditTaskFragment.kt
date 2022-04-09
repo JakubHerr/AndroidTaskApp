@@ -10,9 +10,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.tasks.R
 import com.example.tasks.data.AppDatabase
+import com.example.tasks.data.Task
 import com.example.tasks.databinding.FragmentEditTaskBinding
 import com.example.tasks.viewmodels.TasksViewModel
 import com.example.tasks.viewmodels.TasksViewModelFactory
+import java.text.SimpleDateFormat
 
 class EditTaskFragment : Fragment() {
     private var _binding: FragmentEditTaskBinding? = null
@@ -40,14 +42,24 @@ class EditTaskFragment : Fragment() {
         binding.vm = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        binding.deleteButton.setOnClickListener {
-            viewModel.deleteTask()
-            findNavController().navigate(R.id.action_editTaskFragment_to_tasksFragment)
+        //set up date picking "databinding"
+        binding.dateBtn.setOnClickListener {
+            viewModel.setDate(childFragmentManager)
         }
 
-        binding.editButton.setOnClickListener {
-            viewModel.editTask()
-            findNavController().navigate(R.id.action_editTaskFragment_to_tasksFragment)
+        viewModel.date.observe(viewLifecycleOwner) {
+            binding.dateBtn.text = getString(R.string.no_date_selected)
+            it?.let {
+                binding.dateBtn.text = SimpleDateFormat("dd/MM/yyyy").format(it)
+            }
+        }
+
+        //navigate back when necessary
+        viewModel.navigateBack.observe(viewLifecycleOwner) {
+            if(it) {
+                viewModel.onNavigateBack()
+                findNavController().navigate(R.id.action_editTaskFragment_to_tasksFragment)
+            }
         }
 
         return binding.root
