@@ -5,23 +5,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import com.example.tasks.R
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.tasks.databinding.FragmentAddTaskBinding
 import com.example.tasks.viewmodels.TasksViewModel
-import com.example.tasks.viewmodels.TasksViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddTaskFragment : Fragment() {
     private var _binding: FragmentAddTaskBinding? = null
     private val binding: FragmentAddTaskBinding get() = _binding!!
 
-    @Inject
-    lateinit var viewModelFactory: TasksViewModelFactory
+    private val viewModel: TasksViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,9 +26,6 @@ class AddTaskFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         _binding = FragmentAddTaskBinding.inflate(inflater,container,false)
-
-        //create viewmodel using its factory
-        val viewModel = ViewModelProvider(this,viewModelFactory).get(TasksViewModel::class.java)
 
         //bind the viewmodel to the layout
         binding.vm = viewModel

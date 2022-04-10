@@ -5,16 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.tasks.R
 import com.example.tasks.databinding.FragmentTasksBinding
 import com.example.tasks.adapters.TaskItemAdapter
 import com.example.tasks.viewmodels.TasksViewModel
-import com.example.tasks.viewmodels.TasksViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -23,8 +20,7 @@ class TasksFragment : Fragment() {
     private val binding: FragmentTasksBinding
         get() = _binding!!
 
-    @Inject
-    lateinit var viewModelFactory: TasksViewModelFactory
+    private val viewModel: TasksViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,9 +28,6 @@ class TasksFragment : Fragment() {
     ): View {
         //Inflate the layout for this fragment
         _binding = FragmentTasksBinding.inflate(inflater,container,false)
-
-        //create viewmodel using its factory
-        val viewModel = ViewModelProvider(this,viewModelFactory).get(TasksViewModel::class.java)
 
         //bind the viewmodel to the layout
         binding.vm = viewModel
@@ -45,7 +38,6 @@ class TasksFragment : Fragment() {
             val directions = TasksFragmentDirections.actionTasksFragmentToEditTaskFragment(it)
             findNavController().navigate(directions)
         }
-
         binding.tasksList.adapter = adapter
 
         //update recyclerView when data changes

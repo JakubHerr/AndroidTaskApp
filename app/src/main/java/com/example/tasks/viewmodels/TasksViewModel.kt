@@ -10,9 +10,12 @@ import com.example.tasks.data.TaskDao
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TasksViewModel(private val dao: TaskDao) : ViewModel() {
+@HiltViewModel
+class TasksViewModel @Inject constructor (private val dao: TaskDao) : ViewModel() {
     var newTaskName = "" //holds name for a new task
 
     val date: LiveData<Long?> get() = _date
