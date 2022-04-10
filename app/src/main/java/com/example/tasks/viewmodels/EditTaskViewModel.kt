@@ -8,17 +8,24 @@ import androidx.lifecycle.viewModelScope
 import com.example.tasks.data.Task
 import com.example.tasks.data.TaskDao
 import com.google.android.material.datepicker.MaterialDatePicker
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import javax.inject.Inject
 
-@HiltViewModel
-class EditTaskViewModel @Inject constructor (private val dao: TaskDao) : ViewModel() {
-    var task = MutableLiveData<Task>() //holds task to be edited/deleted
+class EditTaskViewModel(private val dao: TaskDao, taskId: Long) : ViewModel() {
+    var task = MutableLiveData<Task>()
 
     val date: LiveData<String> get() = _date
     private var _date = MutableLiveData("No date")
+
+    init {
+        viewModelScope.launch {
+            val test = dao.get(taskId)
+            test?.let {
+                task.value = it
+                _date.value = dateToString()
+            }
+        }
+    }
 
     val navigateBack: LiveData<Boolean> get() = _navigateBack
     private val _navigateBack = MutableLiveData(false) //tells fragments when to return
@@ -40,18 +47,6 @@ class EditTaskViewModel @Inject constructor (private val dao: TaskDao) : ViewMod
             dao.update(task.value!!)
         }
         _navigateBack.value = true
-    }
-
-    //TODO figure out a better solution
-    // UI loads before task is fetched and binded to layout, causing flickering
-    fun loadTask(id: Long) {
-        viewModelScope.launch {
-            val test = dao.get(id)
-            test?.let {
-                task.value = it
-                _date.value = dateToString()
-            }
-        }
     }
 
     fun setDate(fm: FragmentManager) {
