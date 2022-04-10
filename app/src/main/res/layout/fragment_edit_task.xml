@@ -5,7 +5,7 @@
     <data>
         <variable
             name="vm"
-            type="com.example.tasks.viewmodels.TasksViewModel" />
+            type="com.example.tasks.viewmodels.EditTaskViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/date_picker_description"
+            android:text="@{vm.date}"
             app:icon="@android:drawable/ic_menu_today"
             app:iconPadding="0dp"
             app:layout_constraintStart_toStartOf="parent"

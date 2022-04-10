@@ -10,16 +10,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.tasks.R
 import com.example.tasks.databinding.FragmentEditTaskBinding
-import com.example.tasks.viewmodels.TasksViewModel
+import com.example.tasks.viewmodels.EditTaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.SimpleDateFormat
 
 @AndroidEntryPoint
 class EditTaskFragment : Fragment() {
     private var _binding: FragmentEditTaskBinding? = null
     private val binding: FragmentEditTaskBinding get() = _binding!!
 
-    private val viewModel: TasksViewModel by viewModels()
+    private val viewModel: EditTaskViewModel by viewModels()
 
     private val args: EditTaskFragmentArgs by navArgs()
 
@@ -40,13 +39,6 @@ class EditTaskFragment : Fragment() {
         //set up date picking "databinding"
         binding.dateBtn.setOnClickListener {
             viewModel.setDate(childFragmentManager)
-        }
-
-        viewModel.date.observe(viewLifecycleOwner) {
-            binding.dateBtn.text = getString(R.string.no_date_selected)
-            it?.let {
-                binding.dateBtn.text = SimpleDateFormat("dd/MM/yyyy").format(it)
-            }
         }
 
         //navigate back when necessary

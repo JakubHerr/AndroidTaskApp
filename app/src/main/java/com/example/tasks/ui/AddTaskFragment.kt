@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import com.example.tasks.R
 import androidx.navigation.fragment.findNavController
 import com.example.tasks.databinding.FragmentAddTaskBinding
-import com.example.tasks.viewmodels.TasksViewModel
+import com.example.tasks.viewmodels.AddTaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 
@@ -18,7 +18,7 @@ class AddTaskFragment : Fragment() {
     private var _binding: FragmentAddTaskBinding? = null
     private val binding: FragmentAddTaskBinding get() = _binding!!
 
-    private val viewModel: TasksViewModel by viewModels()
+    private val viewModel: AddTaskViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
