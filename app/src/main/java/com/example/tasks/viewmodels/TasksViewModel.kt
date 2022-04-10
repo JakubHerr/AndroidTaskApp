@@ -46,6 +46,7 @@ class TasksViewModel(private val dao: TaskDao) : ViewModel() {
 
     fun editTask() {
         task.value?.date = _date.value
+        if(task.value!!.taskName.isBlank()) task.value!!.taskName = "Untitled"
         viewModelScope.launch {
             dao.update(task.value!!)
         }

@@ -11,14 +11,20 @@ import androidx.navigation.fragment.findNavController
 import com.example.tasks.R
 import com.example.tasks.databinding.FragmentTasksBinding
 import com.example.tasks.adapters.TaskItemAdapter
-import com.example.tasks.data.AppDatabase
 import com.example.tasks.viewmodels.TasksViewModel
 import com.example.tasks.viewmodels.TasksViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class TasksFragment : Fragment() {
     private var _binding: FragmentTasksBinding? = null
     private val binding: FragmentTasksBinding
         get() = _binding!!
+
+    @Inject
+    lateinit var viewModelFactory: TasksViewModelFactory
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,9 +34,6 @@ class TasksFragment : Fragment() {
         _binding = FragmentTasksBinding.inflate(inflater,container,false)
 
         //create viewmodel using its factory
-        val application = requireNotNull(this.activity).application
-        val dao = AppDatabase.getInstance(application).taskDao
-        val viewModelFactory = TasksViewModelFactory(dao)
         val viewModel = ViewModelProvider(this,viewModelFactory).get(TasksViewModel::class.java)
 
         //bind the viewmodel to the layout
@@ -46,9 +49,9 @@ class TasksFragment : Fragment() {
         binding.tasksList.adapter = adapter
 
         //update recyclerView when data changes
-        viewModel.tasks.observe(viewLifecycleOwner, Observer { newData ->
+        viewModel.tasks.observe(viewLifecycleOwner) { newData ->
             adapter.submitList(newData)
-        })
+        }
 
         //navigate to new task UI
         binding.fab.setOnClickListener {

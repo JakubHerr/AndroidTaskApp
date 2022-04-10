@@ -9,16 +9,20 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.tasks.R
-import com.example.tasks.data.AppDatabase
-import com.example.tasks.data.Task
 import com.example.tasks.databinding.FragmentEditTaskBinding
 import com.example.tasks.viewmodels.TasksViewModel
 import com.example.tasks.viewmodels.TasksViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class EditTaskFragment : Fragment() {
     private var _binding: FragmentEditTaskBinding? = null
     private val binding: FragmentEditTaskBinding get() = _binding!!
+
+    @Inject
+    lateinit var viewModelFactory: TasksViewModelFactory
 
     private val args: EditTaskFragmentArgs by navArgs()
 
@@ -27,9 +31,6 @@ class EditTaskFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         //create viewmodel using its factory
-        val application = requireNotNull(this.activity).application
-        val dao = AppDatabase.getInstance(application).taskDao
-        val viewModelFactory = TasksViewModelFactory(dao)
         val viewModel = ViewModelProvider(this,viewModelFactory).get(TasksViewModel::class.java)
 
         //load the task to edit
