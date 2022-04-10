@@ -20,5 +20,5 @@ interface TaskDao {
     suspend fun get(key: Long): Task?
 
     @Query("SELECT * FROM task_table ORDER BY taskId ASC")
-    fun getAll(): LiveData<List<Task>>
+    fun getAllByIdAsc(): LiveData<List<Task>>
 }

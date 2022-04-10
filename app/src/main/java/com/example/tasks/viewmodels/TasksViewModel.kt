@@ -7,5 +7,5 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TasksViewModel @Inject constructor (dao: TaskDao) : ViewModel() {
-    val tasks = dao.getAll() //holds list of all tasks
+    val tasks = dao.getAllByIdAsc() //holds list of all tasks
 }
