@@ -10,6 +10,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.tasks.R
 import com.example.tasks.data.TaskDao
 import com.example.tasks.databinding.FragmentEditTaskBinding
+import com.example.tasks.extensions.toDate
 import com.example.tasks.viewmodels.EditTaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -40,6 +41,10 @@ class EditTaskFragment : Fragment() {
         //launch date picker
         binding.dateBtn.setOnClickListener {
             viewModel.setDate(childFragmentManager)
+        }
+
+        viewModel.date.observe(viewLifecycleOwner) {
+            binding.dateBtn.text = it?.toDate()
         }
 
         //navigate back when necessary

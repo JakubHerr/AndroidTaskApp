@@ -13,8 +13,14 @@ data class Task (
     var taskName: String = "",
 
     @ColumnInfo(name = "date")
-    var date: Long? = null,
+    var date: Long = 0L,
+
+    @ColumnInfo(name = "time_estimate")
+    var timeEstimate: Int = 0,
 
     @ColumnInfo(name = "task_done")
-    var taskDone: Boolean = false
+    var taskDone: Boolean = false,
+
+    @ColumnInfo(name = "priority")
+    var priority: Byte = 0
 )

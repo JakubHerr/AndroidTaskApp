@@ -16,8 +16,8 @@ import javax.inject.Inject
 class AddTaskViewModel @Inject constructor(private val dao: TaskDao) : ViewModel() {
     var newTaskName = "" //holds name for a new task
 
-    val date: LiveData<Long?> get() = _date
-    private val _date = MutableLiveData<Long?>(null) //Epoch milliseconds
+    val date: LiveData<Long> get() = _date
+    private val _date = MutableLiveData(0L)
 
     val navigateBack: LiveData<Boolean> get() = _navigateBack
     private val _navigateBack = MutableLiveData(false) //tells fragments when to return
@@ -25,7 +25,7 @@ class AddTaskViewModel @Inject constructor(private val dao: TaskDao) : ViewModel
     fun addTask() {
         if(newTaskName.isBlank()) newTaskName = "Untitled"
         viewModelScope.launch {
-            dao.insert(Task(taskName = newTaskName, date = _date.value, taskDone = false))
+            dao.insert(Task(taskName = newTaskName, date = _date.value!!, taskDone = false))
         }
         _navigateBack.value = true
     }
@@ -33,14 +33,14 @@ class AddTaskViewModel @Inject constructor(private val dao: TaskDao) : ViewModel
     fun setDate(fm: FragmentManager) {
         val datePicker = MaterialDatePicker.Builder.datePicker()
             .setTitleText("Choose date")
-            .setSelection(_date.value ?: MaterialDatePicker.todayInUtcMilliseconds())
+            .setSelection(if(_date.value == 0L) MaterialDatePicker.todayInUtcMilliseconds() else _date.value)
             .build()
         datePicker.show(fm,"datePicker")
         datePicker.addOnPositiveButtonClickListener {
-            _date.value = datePicker.selection
+            _date.value = datePicker.selection ?: 0
         }
         datePicker.addOnNegativeButtonClickListener {
-            _date.value = null
+            _date.value = 0L
         }
     }
 

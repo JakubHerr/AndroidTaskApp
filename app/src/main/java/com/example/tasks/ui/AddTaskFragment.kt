@@ -9,9 +9,9 @@ import androidx.fragment.app.viewModels
 import com.example.tasks.R
 import androidx.navigation.fragment.findNavController
 import com.example.tasks.databinding.FragmentAddTaskBinding
+import com.example.tasks.extensions.toDate
 import com.example.tasks.viewmodels.AddTaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.SimpleDateFormat
 
 @AndroidEntryPoint
 class AddTaskFragment : Fragment() {
@@ -37,10 +37,7 @@ class AddTaskFragment : Fragment() {
         }
 
         viewModel.date.observe(viewLifecycleOwner) {
-            binding.dateBtn.text = getString(R.string.no_date_selected)
-            it?.let {
-                binding.dateBtn.text = SimpleDateFormat("dd/MM/yyyy").format(it)
-            }
+            binding.dateBtn.text = it.toDate()
         }
 
         //navigate back when necessary

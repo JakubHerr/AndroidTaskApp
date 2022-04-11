@@ -9,20 +9,20 @@ import com.example.tasks.data.Task
 import com.example.tasks.data.TaskDao
 import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 
 class EditTaskViewModel(private val dao: TaskDao, taskId: Long) : ViewModel() {
+
     var task = MutableLiveData<Task>()
 
-    val date: LiveData<String> get() = _date
-    private var _date = MutableLiveData("No date")
+    val date: LiveData<Long> get() = _date
+    private val _date = MutableLiveData(0L)
 
     init {
         viewModelScope.launch {
             val test = dao.get(taskId)
             test?.let {
                 task.value = it
-                _date.value = dateToString()
+                _date.value = it.date
             }
         }
     }
@@ -52,24 +52,16 @@ class EditTaskViewModel(private val dao: TaskDao, taskId: Long) : ViewModel() {
     fun setDate(fm: FragmentManager) {
         val datePicker = MaterialDatePicker.Builder.datePicker()
             .setTitleText("Choose date")
-            .setSelection(task.value?.date ?: MaterialDatePicker.todayInUtcMilliseconds())
+            .setSelection(if(task.value?.date == 0L) MaterialDatePicker.todayInUtcMilliseconds() else task.value?.date)
             .build()
         datePicker.show(fm,"datePicker")
         datePicker.addOnPositiveButtonClickListener {
-            task.value?.date = datePicker.selection
-            _date.value = dateToString()
+            task.value?.date = datePicker.selection ?: 0
+            _date.value = task.value?.date
         }
         datePicker.addOnNegativeButtonClickListener {
-            task.value?.date = null
-            _date.value = dateToString()
+            task.value?.date = 0L
+            _date.value = task.value?.date
         }
-    }
-
-    private fun dateToString() : String {
-        var result = "No date"
-        task.value?.date?.let {
-            result = SimpleDateFormat("dd/MM/yyyy").format(it)
-        }
-        return result
     }
 }
