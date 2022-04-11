@@ -101,4 +101,29 @@ class TaskDaoTest {
         assertThat(taskDao.get(123).getOrAwaitValue()).isNull()
     }
 
+    @Test
+    fun sortByPriorityDesc() = runBlockingTest {
+        val tasks = mutableListOf(Task(priority = 2),
+        Task(priority = 5),
+        Task(priority = -6),
+        Task(priority = 127),
+        Task(priority = 39),
+        Task(priority = 3),
+        Task(priority = 34),
+        Task(priority = 51),
+        Task(priority = 2),
+        Task(priority = 3)
+        )
+
+        tasks.forEach {
+            taskDao.insert(it)
+        }
+
+        val sortedDb = taskDao.getAllByPriorityDesc().getOrAwaitValue()
+        tasks.sortByDescending { it.priority }
+
+        for (i in 0 until tasks.size) {
+            assertThat(sortedDb[i].priority).isEqualTo(tasks[i].priority)
+        }
+    }
 }

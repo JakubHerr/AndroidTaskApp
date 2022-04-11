@@ -12,4 +12,7 @@
     <string name="edit_button">Edit</string>
     <string name="add_task_fab">add task</string>
     <string name="edit_prompt">Edit task name</string>
+    <string name="sort_by_priority_chip">Most important</string>
+    <string name="sort_by_deadline_chip">Closest deadlines</string>
+    <string name="sort_by_id_chip">By ID</string>
 </resources>

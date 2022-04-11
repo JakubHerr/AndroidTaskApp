@@ -21,4 +21,14 @@ interface TaskDao {
 
     @Query("SELECT * FROM task_table ORDER BY taskId ASC")
     fun getAllByIdAsc(): LiveData<List<Task>>
+
+    //get all tasks most important first
+    @Query("SELECT * from task_table ORDER BY priority DESC")
+    fun getAllByPriorityDesc(): LiveData<List<Task>>
+
+    //tasks with closest deadline get shown first, TODO make tasks without deadline last
+    @Query("SELECT * FROM task_table ORDER BY date ASC")
+    fun getAllByDeadlineAsc(): LiveData<List<Task>>
+
+
 }
