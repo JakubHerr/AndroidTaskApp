@@ -9,6 +9,7 @@
     <string name="task_name_prompt">Enter a task name</string>
     <string name="add_task_button">add task</string>
     <string name="delete_button">Delete</string>
-    <string name="edit_button">edit</string>
+    <string name="edit_button">Edit</string>
     <string name="add_task_fab">add task</string>
+    <string name="edit_prompt">Edit task name</string>
 </resources>

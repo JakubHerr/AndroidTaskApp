@@ -6,11 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import com.example.tasks.R
 import androidx.navigation.fragment.findNavController
+import com.example.tasks.data.Task
 import com.example.tasks.databinding.FragmentAddTaskBinding
 import com.example.tasks.extensions.toDate
-import com.example.tasks.viewmodels.AddTaskViewModel
+import com.example.tasks.viewmodels.TaskViewModel
+import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,7 +19,8 @@ class AddTaskFragment : Fragment() {
     private var _binding: FragmentAddTaskBinding? = null
     private val binding: FragmentAddTaskBinding get() = _binding!!
 
-    private val viewModel: AddTaskViewModel by viewModels()
+    private val viewModel: TaskViewModel by viewModels()
+    private val newTask = Task()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,27 +30,40 @@ class AddTaskFragment : Fragment() {
         _binding = FragmentAddTaskBinding.inflate(inflater,container,false)
 
         //bind the viewmodel to the layout
-        binding.vm = viewModel
-        binding.lifecycleOwner = viewLifecycleOwner
-
-        //set up date picking "databinding"
-        binding.dateBtn.setOnClickListener {
-            viewModel.setDate(childFragmentManager)
-        }
-
-        viewModel.date.observe(viewLifecycleOwner) {
-            binding.dateBtn.text = it.toDate()
-        }
-
-        //navigate back when necessary
-        viewModel.navigateBack.observe(viewLifecycleOwner) {
-            if(it) {
-                viewModel.onNavigateBack()
-                findNavController().navigate(R.id.action_addTaskFragment_to_tasksFragment)
-            }
-        }
-
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setup()
+    }
+
+    private fun setup() {
+        binding.dateBtn.text = newTask.date.toDate()
+        binding.dateBtn.setOnClickListener {
+            setDate()
+        }
+        binding.saveButton.setOnClickListener {
+            newTask.taskName = binding.taskName.text.toString()
+            viewModel.addTask(newTask)
+            findNavController().navigateUp()
+        }
+    }
+
+    private fun setDate() {
+        val datePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Choose date")
+            .setSelection(if(newTask.date == 0L) MaterialDatePicker.todayInUtcMilliseconds() else newTask.date)
+            .build()
+        datePicker.show(childFragmentManager,"datePicker")
+        datePicker.addOnPositiveButtonClickListener {
+            newTask.date = datePicker.selection ?: 0L
+            binding.dateBtn.text = newTask.date.toDate()
+        }
+        datePicker.addOnNegativeButtonClickListener {
+            newTask.date = 0L
+            binding.dateBtn.text = newTask.date.toDate()
+        }
     }
 
     override fun onDestroyView() {

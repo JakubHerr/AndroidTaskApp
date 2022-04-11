@@ -5,7 +5,7 @@
     <data>
         <variable
             name="vm"
-            type="com.example.tasks.viewmodels.TasksViewModel" />
+            type="com.example.tasks.viewmodels.TaskViewModel" />
     </data>
 <LinearLayout
     android:layout_width="match_parent"

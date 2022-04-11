@@ -46,7 +46,7 @@ class TaskDaoTest {
         val task = Task(taskId = taskId, taskName = "test", date = 1234L, taskDone = true)
         taskDao.insert(task)
 
-        val retrievedTask = taskDao.get(taskId)
+        val retrievedTask = taskDao.get(taskId).getOrAwaitValue()
         assertThat(retrievedTask).isEqualTo(task)
     }
 
@@ -59,7 +59,7 @@ class TaskDaoTest {
         val newTask = Task(taskId, taskName = "new task")
         taskDao.update(newTask)
 
-        val savedTask = taskDao.get(taskId)
+        val savedTask = taskDao.get(taskId).getOrAwaitValue()
         assertThat(savedTask).isEqualTo(newTask)
     }
 
@@ -69,7 +69,7 @@ class TaskDaoTest {
         val task = Task(taskId = taskId, taskName = "test", date = 1234L, taskDone = true)
         taskDao.insert(task)
         taskDao.delete(task)
-        val retrievedTask = taskDao.get(taskId)
+        val retrievedTask = taskDao.get(taskId).getOrAwaitValue()
         assertThat(retrievedTask).isNull()
     }
 
@@ -93,12 +93,12 @@ class TaskDaoTest {
     @Test
     fun getValidTask() = runBlockingTest {
         taskDao.insert(Task(taskId = 123,taskName = "valid task"))
-        assertThat(taskDao.get(123)).isNotNull()
+        assertThat(taskDao.get(123).getOrAwaitValue()).isNotNull()
     }
 
     @Test
     fun getInvalidTask() = runBlockingTest {
-        assertThat(taskDao.get(123)).isNull()
+        assertThat(taskDao.get(123).getOrAwaitValue()).isNull()
     }
 
 }

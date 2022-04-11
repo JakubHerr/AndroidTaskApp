@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.tasks.R
 import com.example.tasks.databinding.FragmentTasksBinding
 import com.example.tasks.adapters.TaskItemAdapter
-import com.example.tasks.viewmodels.TasksViewModel
+import com.example.tasks.viewmodels.TaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -20,7 +20,7 @@ class TasksFragment : Fragment() {
     private val binding: FragmentTasksBinding
         get() = _binding!!
 
-    private val viewModel: TasksViewModel by viewModels()
+    private val viewModel: TaskViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
