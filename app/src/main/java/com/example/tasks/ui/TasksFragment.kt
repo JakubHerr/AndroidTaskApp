@@ -6,17 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import com.example.tasks.R
 import com.example.tasks.adapters.TaskCategoryAdapter
 import com.example.tasks.databinding.FragmentTasksBinding
-import com.example.tasks.adapters.TaskItemAdapter
-import com.example.tasks.data.Task
 import com.example.tasks.viewmodels.TaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class TasksFragment : Fragment() {
@@ -39,15 +34,8 @@ class TasksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //bind the viewmodel to the layout
         binding.vm = viewModel
-        binding.lifecycleOwner = viewLifecycleOwner
 
-        val adapter = TaskCategoryAdapter(viewLifecycleOwner) {
-            val directions = TasksFragmentDirections.actionTasksFragmentToEditTaskFragment(it)
-            findNavController().navigate(directions)
-        }
-
-        binding.categoryRecycler.adapter = adapter
-        adapter.submitList(viewModel.categories)
+        setUpRecyclerView()
 
         //navigate to new task UI
         binding.addTaskFab.setOnClickListener {
@@ -55,31 +43,18 @@ class TasksFragment : Fragment() {
         }
     }
 
-    private fun setUpRecyclerView(recyclerView: RecyclerView, source: LiveData<List<Task>>) {
-        val adapter = TaskItemAdapter{
-
+    private fun setUpRecyclerView() {
+        val adapter = TaskCategoryAdapter(viewLifecycleOwner) {
+            val directions = TasksFragmentDirections.actionTasksFragmentToEditTaskFragment(it)
+            findNavController().navigate(directions)
         }
-        //set adapter for recyclerview
-        recyclerView.adapter = adapter
 
-        //set up source of data for adapter
-        source.observe(viewLifecycleOwner) { newData ->
-            adapter.submitList(newData)
-        }
+        binding.categoryRecycler.adapter = adapter
+        adapter.submitList(viewModel.categories)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-    //    private fun setUpSorting() {
-//        binding.sortSelection.setOnCheckedChangeListener { group, checkedId ->
-//            when(checkedId) {
-//                binding.sortByPriority.id -> viewModel.sortBy(SortType.PRIORITY)
-//                binding.sortByNextDate.id -> viewModel.sortBy(SortType.FUTURE_DEADLINE)
-//                else -> viewModel.sortBy(SortType.DEFAULT)
-//            }
-//        }
-//    }
 }

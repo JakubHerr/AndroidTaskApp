@@ -14,7 +14,9 @@
         android:layout_height="match_parent"
         android:layout_margin="16dp"
         tools:context=".ui.TasksFragment">
-
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/categoryRecycler"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -22,7 +24,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
+        </ScrollView>
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_task_fab"
             android:layout_width="wrap_content"
