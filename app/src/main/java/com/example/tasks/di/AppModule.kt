@@ -3,6 +3,7 @@ package com.example.tasks.di
 import android.content.Context
 import androidx.room.Room
 import com.example.tasks.data.AppDatabase
+import com.example.tasks.other.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,7 +22,7 @@ object AppModule {
         ) = Room.databaseBuilder(
         app,
         AppDatabase::class.java,
-        "tasks_database"
+        Constants.DATABASE_NAME
     ).build()
 
     @Provides

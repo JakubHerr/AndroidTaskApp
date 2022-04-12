@@ -1,5 +1,5 @@
 package com.example.tasks.other
 
 enum class SortType {
-    DEFAULT, PRIORITY, DEADLINE
+    DEFAULT, PRIORITY, FUTURE_DEADLINE, OVERDUE_DEADLINE
 }

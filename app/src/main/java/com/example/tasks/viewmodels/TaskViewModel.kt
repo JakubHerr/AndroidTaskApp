@@ -1,43 +1,26 @@
 package com.example.tasks.viewmodels
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tasks.data.Category
 import com.example.tasks.data.Task
 import com.example.tasks.data.TaskDao
-import com.example.tasks.other.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import javax.inject.Inject
 
 @HiltViewModel
 class TaskViewModel @Inject constructor (private val dao: TaskDao) : ViewModel() {
-    val tasks = MediatorLiveData<List<Task>>()
+    private val sortedByFutureDeadline = dao.getAllFutureByDeadlineAsc(Clock.System.now().toEpochMilliseconds())
+    private val sortedByOverdueDeadline = dao.getAllOverdueByDeadlineAsc(Clock.System.now().toEpochMilliseconds())
+    private val noDeadline = dao.getAllWithoutDeadline()
 
-    private val sortedByDeadline = dao.getAllByDeadlineAsc()
-    private val sortedByPriority = dao.getAllByPriorityDesc()
-    private val sortedById = dao.getAllByIdAsc()
-
-    var sortedBy = SortType.DEFAULT
-
-    init {
-        tasks.addSource(sortedByDeadline) { result ->
-            if(sortedBy == SortType.DEADLINE) {
-                result?.let { tasks.value = it }
-            }
-        }
-        tasks.addSource(sortedByPriority) { result ->
-            if(sortedBy == SortType.PRIORITY) {
-                result?.let { tasks.value = it }
-            }
-        }
-        tasks.addSource(sortedById) { result ->
-            if(sortedBy == SortType.DEFAULT) {
-                result?.let { tasks.value = it }
-            }
-        }
-    }
+    val categories = listOf(
+        Category("Overdue",sortedByOverdueDeadline),
+        Category("Future",sortedByFutureDeadline),
+        Category("No date",noDeadline))
 
     fun addTask(task: Task) {
         if(task.taskName.isBlank()) task.taskName = "Untitled"
@@ -63,11 +46,38 @@ class TaskViewModel @Inject constructor (private val dao: TaskDao) : ViewModel()
         return dao.get(taskId)
     }
 
-    fun sortBy(sortType: SortType) = when(sortType) {
-        SortType.DEADLINE -> sortedByDeadline.value?.let { tasks.value = it }
-        SortType.PRIORITY -> sortedByPriority.value?.let { tasks.value = it }
-        SortType.DEFAULT -> sortedById.value?.let { tasks.value = it }
-    }.also {
-        this.sortedBy = sortType
-    }
+//currently unused functions for instant sorting of single recyclerview
+//val tasks = MediatorLiveData<List<Task>>()
+//private var sortedBy = SortType.FUTURE_DEADLINE
+//    init {
+//        tasks.addSource(sortedByFutureDeadline) { result ->
+//            if(sortedBy == SortType.FUTURE_DEADLINE) {
+//                result?.let { tasks.value = it }
+//            }
+//        }
+//        tasks.addSource(sortedByOverdueDeadline) { result ->
+//            if(sortedBy == SortType.OVERDUE_DEADLINE) {
+//                result?.let { tasks.value = it }
+//            }
+//        }
+//        tasks.addSource(sortedByPriority) { result ->
+//            if(sortedBy == SortType.PRIORITY) {
+//                result?.let { tasks.value = it }
+//            }
+//        }
+//        tasks.addSource(sortedById) { result ->
+//            if(sortedBy == SortType.DEFAULT) {
+//                result?.let { tasks.value = it }
+//            }
+//        }
+//    }
+
+//    fun sortBy(sortType: SortType) = when(sortType) {
+//        SortType.FUTURE_DEADLINE -> sortedByFutureDeadline.value?.let { tasks.value = it }
+//        SortType.OVERDUE_DEADLINE -> sortedByOverdueDeadline.value?.let { tasks.value = it }
+//        SortType.PRIORITY -> sortedByPriority.value?.let { tasks.value = it }
+//        SortType.DEFAULT -> sortedById.value?.let { tasks.value = it }
+//    }.also {
+//        this.sortedBy = sortType
+//    }
 }
