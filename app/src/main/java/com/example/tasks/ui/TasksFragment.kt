@@ -44,11 +44,12 @@ class TasksFragment : Fragment() {
     }
 
     private fun setUpRecyclerView() {
-        val adapter = TaskCategoryAdapter(viewLifecycleOwner) {
+        val adapter = TaskCategoryAdapter(viewLifecycleOwner, {
             val directions = TasksFragmentDirections.actionTasksFragmentToEditTaskFragment(it)
             findNavController().navigate(directions)
-        }
-
+        },{
+            viewModel.completeTask(it)
+        })
         binding.categoryRecycler.adapter = adapter
         adapter.submitList(viewModel.categories)
     }

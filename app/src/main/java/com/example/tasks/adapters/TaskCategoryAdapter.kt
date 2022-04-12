@@ -12,15 +12,16 @@ import com.example.tasks.databinding.ListCardBinding
 
 class TaskCategoryAdapter(
     private val lifecycleOwner: LifecycleOwner,
-    private val clickListener: (id: Long) -> Unit) : ListAdapter<Category,
-        TaskCategoryAdapter.TaskCategoryViewHolder>(CategoryDiffItemCallback()) {
+    private val clickListener: (id: Long) -> Unit,
+    private val checkboxClickListener: (id: Long) -> Unit,)
+    : ListAdapter<Category,TaskCategoryAdapter.TaskCategoryViewHolder>(CategoryDiffItemCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskCategoryViewHolder
             = TaskCategoryViewHolder.inflateFrom(parent)
 
     override fun onBindViewHolder(holder: TaskCategoryViewHolder, position: Int) {
         val task = getItem(position)
-        holder.bind(task,lifecycleOwner,clickListener)
+        holder.bind(task,lifecycleOwner,clickListener,checkboxClickListener)
     }
 
     class TaskCategoryViewHolder(val binding: ListCardBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -32,10 +33,10 @@ class TaskCategoryAdapter(
             }
         }
 
-        fun bind(category: Category,lifecycleOwner: LifecycleOwner, clickListener: (id: Long) -> Unit) {
+        fun bind(category: Category,lifecycleOwner: LifecycleOwner, clickListener: (id: Long) -> Unit, checkboxClickListener: (id: Long) -> Unit) {
             binding.category = category
 
-            val taskAdapter = TaskItemAdapter(clickListener)
+            val taskAdapter = TaskItemAdapter(clickListener, checkboxClickListener)
 
             binding.collapseButton.setOnClickListener {
                 binding.taskList.visibility = when(binding.taskList.visibility) {
@@ -46,6 +47,7 @@ class TaskCategoryAdapter(
 
             binding.taskList.adapter = taskAdapter
             category.tasks.observe(lifecycleOwner) { newData ->
+                binding.card.visibility  = if(newData.isEmpty()) View.GONE else View.VISIBLE
                 taskAdapter.submitList(newData)
             }
 

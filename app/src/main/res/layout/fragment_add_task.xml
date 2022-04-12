@@ -9,23 +9,24 @@
         android:layout_margin="16dp"
         tools:context=".ui.TasksFragment">
 
-        <EditText
-            android:id="@+id/task_name"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/name_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:hint="@string/task_name_prompt"
-            android:importantForAutofill="no"
-            android:inputType="text"
-            android:minHeight="48dp"
-            android:textColorHint="#757575"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/task_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/task_name_prompt"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="@string/add_task_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/date_btn" />
@@ -39,6 +40,6 @@
             app:icon="@android:drawable/ic_menu_today"
             app:iconPadding="0dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/task_name" />
+            app:layout_constraintTop_toBottomOf="@+id/name_layout" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -42,6 +42,12 @@ class TaskViewModel @Inject constructor (private val dao: TaskDao) : ViewModel()
         }
     }
 
+    fun completeTask(taskId: Long) {
+        viewModelScope.launch {
+            dao.toggleTaskDone(taskId)
+        }
+    }
+
     fun retrieveTask(taskId: Long) : LiveData<Task> {
         return dao.get(taskId)
     }

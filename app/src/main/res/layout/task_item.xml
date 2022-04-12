@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
             name="task"
@@ -10,15 +11,7 @@
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:textSize="16sp"
-        android:padding="8dp"
-        app:cardElevation="4dp"
-        app:cardCornerRadius="4dp">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        android:textSize="16sp">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -31,17 +24,16 @@
                     android:padding="8dp"
                     android:checked="@{task.taskDone}"
                     android:clickable="false"
+                    tools:text="Example task"
                     android:text="@{task.taskName}"/>
-
+                <TextView
+                    android:id="@+id/date"
+                    tools:text="Apr 20"
+                    android:textAlignment="textEnd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:padding="8dp"/>
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:padding="8dp"/>
-
-        </LinearLayout>
     </androidx.cardview.widget.CardView>
 </layout>

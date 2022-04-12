@@ -7,21 +7,22 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tasks.databinding.TaskItemBinding
 import com.example.tasks.data.Task
+import com.example.tasks.extensions.toDate
 import java.text.SimpleDateFormat
 
-class TaskItemAdapter(val clickListener: (id: Long) -> Unit) : ListAdapter<Task, TaskItemAdapter.TaskItemViewHolder>(TaskDiffItemCallback()) {
+class TaskItemAdapter(private val itemClickListener: (id: Long) -> Unit,
+                      private val checkboxClickListener: (id: Long) -> Unit)
+    : ListAdapter<Task, TaskItemAdapter.TaskItemViewHolder>(TaskDiffItemCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskItemViewHolder
             = TaskItemViewHolder.inflateFrom(parent)
 
     override fun onBindViewHolder(holder: TaskItemViewHolder, position: Int) {
         val task = getItem(position)
-        holder.bind(task,clickListener)
+        holder.bind(task,itemClickListener, checkboxClickListener)
     }
 
     class TaskItemViewHolder(val binding: TaskItemBinding) : RecyclerView.ViewHolder(binding.root) {
-
-        private val sdf = SimpleDateFormat("dd/MM/yyyy")
 
         companion object{
             fun inflateFrom(parent: ViewGroup) : TaskItemViewHolder {
@@ -31,23 +32,19 @@ class TaskItemAdapter(val clickListener: (id: Long) -> Unit) : ListAdapter<Task,
             }
         }
 
-        fun bind(task: Task, clickListener: (id: Long) -> Unit) {
+        fun bind(task: Task, itemClickListener: (id: Long) -> Unit, checkboxClickListener: (id: Long) -> Unit) {
             binding.task = task
 
             task.date.let {
-                binding.date.text = when(it) {
-                    0L -> ""
-                    else -> sdf.format(it)
-                }
+                binding.date.text = it.toDate()
             }
 
-            //currently, the checkbox is only visual TODO update the task in database
             binding.checkbox.setOnClickListener {
-                task.taskDone = !task.taskDone
+                checkboxClickListener(task.taskId)
             }
 
             binding.root.setOnClickListener {
-                clickListener(task.taskId)
+                itemClickListener(task.taskId)
             }
         }
     }

@@ -13,6 +13,10 @@ interface TaskDao {
     suspend fun insert(task: Task)
     @Update
     suspend fun update(task: Task)
+
+    @Query("UPDATE task_table SET task_done = NOT task_done WHERE taskId = :taskId")
+    suspend fun toggleTaskDone(taskId: Long)
+
     @Delete
     suspend fun delete(task: Task)
 
