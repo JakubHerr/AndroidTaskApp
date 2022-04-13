@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tasks.data.Category
-import com.example.tasks.databinding.ListCardBinding
+import com.example.tasks.databinding.CategoryItemBinding
 
 class TaskCategoryAdapter(
     private val lifecycleOwner: LifecycleOwner,
@@ -24,11 +24,11 @@ class TaskCategoryAdapter(
         holder.bind(task,lifecycleOwner,clickListener,checkboxClickListener)
     }
 
-    class TaskCategoryViewHolder(val binding: ListCardBinding) : RecyclerView.ViewHolder(binding.root) {
+    class TaskCategoryViewHolder(val binding: CategoryItemBinding) : RecyclerView.ViewHolder(binding.root) {
         companion object{
             fun inflateFrom(parent: ViewGroup) : TaskCategoryViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ListCardBinding.inflate(layoutInflater,parent,false)
+                val binding = CategoryItemBinding.inflate(layoutInflater,parent,false)
                 return TaskCategoryViewHolder(binding)
             }
         }
@@ -47,6 +47,7 @@ class TaskCategoryAdapter(
 
             binding.taskList.adapter = taskAdapter
             category.tasks.observe(lifecycleOwner) { newData ->
+                //TODO fix, card is not visible, but leaves a gap in recyclerview
                 binding.card.visibility  = if(newData.isEmpty()) View.GONE else View.VISIBLE
                 taskAdapter.submitList(newData)
             }

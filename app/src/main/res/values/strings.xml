@@ -10,6 +10,7 @@
     <string name="add_task_button">add task</string>
     <string name="delete_button">Delete</string>
     <string name="edit_button">Edit</string>
+    <string name="cancel_button">Cancel</string>
     <string name="edit_button_description">Edit task</string>
     <string name="add_task_fab">add task</string>
     <string name="edit_prompt">Edit task name</string>
@@ -17,4 +18,5 @@
     <string name="sort_by_deadline_chip">Closest deadlines</string>
     <string name="sort_by_id_chip">By ID</string>
     <string name="visibility_toggle_description">toggle list visibility</string>
+    <string name="modify_task_fab">Modify task</string>
 </resources>

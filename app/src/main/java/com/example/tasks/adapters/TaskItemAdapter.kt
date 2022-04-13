@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tasks.databinding.TaskItemBinding
 import com.example.tasks.data.Task
 import com.example.tasks.extensions.toDate
-import java.text.SimpleDateFormat
 
 class TaskItemAdapter(private val itemClickListener: (id: Long) -> Unit,
                       private val checkboxClickListener: (id: Long) -> Unit)

@@ -9,14 +9,14 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.tasks.R
 import com.example.tasks.adapters.TaskCategoryAdapter
-import com.example.tasks.databinding.FragmentTasksBinding
+import com.example.tasks.databinding.FragmentTaskListBinding
 import com.example.tasks.viewmodels.TaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TasksFragment : Fragment() {
-    private var _binding: FragmentTasksBinding? = null
-    private val binding: FragmentTasksBinding
+class TaskListFragment : Fragment() {
+    private var _binding: FragmentTaskListBinding? = null
+    private val binding: FragmentTaskListBinding
         get() = _binding!!
 
     private val viewModel: TaskViewModel by viewModels()
@@ -26,7 +26,7 @@ class TasksFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         //Inflate the layout for this fragment
-        _binding = FragmentTasksBinding.inflate(inflater,container,false)
+        _binding = FragmentTaskListBinding.inflate(inflater,container,false)
         return binding.root
     }
 
@@ -45,7 +45,7 @@ class TasksFragment : Fragment() {
 
     private fun setUpRecyclerView() {
         val adapter = TaskCategoryAdapter(viewLifecycleOwner, {
-            val directions = TasksFragmentDirections.actionTasksFragmentToEditTaskFragment(it)
+            val directions = TaskListFragmentDirections.actionTasksFragmentToEditTaskFragment(it)
             findNavController().navigate(directions)
         },{
             viewModel.completeTask(it)

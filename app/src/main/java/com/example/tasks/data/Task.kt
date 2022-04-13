@@ -15,6 +15,9 @@ data class Task (
     @ColumnInfo(name = "date")
     var date: Long = 0L,
 
+    @ColumnInfo(name = "time")
+    var time: Long = 0L,
+
     @ColumnInfo(name = "time_estimate")
     var timeEstimate: Int = 0,
 
