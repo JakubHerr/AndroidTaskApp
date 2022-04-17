@@ -17,10 +17,23 @@ class TaskViewModel @Inject constructor (private val dao: TaskDao) : ViewModel()
     private val sortedByOverdueDeadline = dao.getAllOverdueByDeadlineAsc(Clock.System.now().toEpochMilliseconds())
     private val noDeadline = dao.getAllWithoutDeadline()
 
-    val categories = listOf(
+    val deadline = mutableListOf(
         Category("Overdue",sortedByOverdueDeadline),
         Category("Future",sortedByFutureDeadline),
         Category("No date",noDeadline))
+
+    val priority = listOf(
+        Category("No", dao.getNoPriority()),
+        Category("Low",dao.getLowPriority()),
+        Category("Medium",dao.getMediumPriority()),
+        Category("High",dao.getHighPriority())
+    )
+
+    val default = listOf(
+        Category("Tasks",dao.getAll())
+    )
+
+    private val completed = Category("Completed",dao.getAllCompleted())
 
     fun addTask(task: Task) {
         if(task.taskName.isBlank()) task.taskName = "Untitled"

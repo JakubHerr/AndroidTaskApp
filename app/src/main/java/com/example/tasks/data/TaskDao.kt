@@ -24,21 +24,31 @@ interface TaskDao {
     fun get(key: Long): LiveData<Task>
 
     @Query("SELECT * FROM task_table ORDER BY taskId ASC")
-    fun getAllByIdAsc(): LiveData<List<Task>>
+    fun getAll(): LiveData<List<Task>>
 
-    //get all tasks most important first
-    @Query("SELECT * from task_table ORDER BY priority DESC")
-    fun getAllByPriorityDesc(): LiveData<List<Task>>
+    @Query("SELECT * FROM task_table WHERE task_done ORDER BY taskId ASC")
+    fun getAllCompleted(): LiveData<List<Task>>
 
     //DEADLINE RELATED QUERIES
-    @Query("SELECT * FROM task_table WHERE date > :present ORDER BY date ASC")
+    @Query("SELECT * FROM task_table WHERE date > :present AND NOT task_done ORDER BY date ASC")
     fun getAllFutureByDeadlineAsc(present: Long): LiveData<List<Task>>
 
-    @Query("SELECT * FROM task_table WHERE date < :present AND date IS NOT 0 ORDER BY date ASC")
+    @Query("SELECT * FROM task_table WHERE date < :present AND date IS NOT 0 AND NOT task_done ORDER BY date ASC")
     fun getAllOverdueByDeadlineAsc(present: Long): LiveData<List<Task>>
 
-    @Query("SELECT * FROM task_table WHERE date IS 0")
+    @Query("SELECT * FROM task_table WHERE date IS 0 AND NOT task_done ")
     fun getAllWithoutDeadline() : LiveData<List<Task>>
 
+    //PRIORITY RELATED QUERIES
+    @Query("SELECT * FROM task_table WHERE priority = 0 AND NOT task_done ")
+    fun getNoPriority() : LiveData<List<Task>>
 
+    @Query("SELECT * FROM task_table WHERE priority = 1 AND NOT task_done ")
+    fun getLowPriority() : LiveData<List<Task>>
+
+    @Query("SELECT * FROM task_table WHERE priority = 2 AND NOT task_done ")
+    fun getMediumPriority() : LiveData<List<Task>>
+
+    @Query("SELECT * FROM task_table WHERE priority = 3 AND NOT task_done ")
+    fun getHighPriority() : LiveData<List<Task>>
 }

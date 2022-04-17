@@ -36,6 +36,7 @@ class TaskListFragment : Fragment() {
         binding.vm = viewModel
 
         setUpRecyclerView()
+        handleMenu()
 
         //navigate to new task UI
         binding.addTaskFab.setOnClickListener {
@@ -51,7 +52,19 @@ class TaskListFragment : Fragment() {
             viewModel.completeTask(it)
         })
         binding.categoryRecycler.adapter = adapter
-        adapter.submitList(viewModel.categories)
+        adapter.submitList(viewModel.deadline)
+    }
+
+    //TODO add menu functionality
+    private fun handleMenu() {
+        binding.topAppBar.setOnMenuItemClickListener {
+            when(it.itemId) {
+                R.id.completed -> {
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     override fun onDestroyView() {
