@@ -19,4 +19,6 @@
     <string name="sort_by_id_chip">By ID</string>
     <string name="visibility_toggle_description">toggle list visibility</string>
     <string name="modify_task_fab">Modify task</string>
+    <string name="channel_name">Channel name</string>
+    <string name="channel_description">description</string>
 </resources>
