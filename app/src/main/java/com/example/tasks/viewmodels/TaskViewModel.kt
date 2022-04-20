@@ -1,5 +1,6 @@
 package com.example.tasks.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -36,6 +37,7 @@ class TaskViewModel @Inject constructor (private val dao: TaskDao) : ViewModel()
     private val completed = Category("Completed",dao.getAllCompleted())
 
     fun addTask(task: Task) {
+        Log.d("TaskViewModel","Added task with timestamp ${task.deadline}")
         if(task.taskName.isBlank()) task.taskName = "Untitled"
         viewModelScope.launch {
             dao.insert(task)
@@ -43,12 +45,14 @@ class TaskViewModel @Inject constructor (private val dao: TaskDao) : ViewModel()
     }
 
     fun deleteTask(task: Task) {
+        Log.d("TaskViewModel","deleted task with id ${task.taskId}")
         viewModelScope.launch {
             dao.delete(task)
         }
     }
 
     fun editTask(task: Task) {
+        Log.d("TaskViewModel","edited task with timestamp ${task.deadline}")
         if(task.taskName.isBlank()) task.taskName = "Untitled"
         viewModelScope.launch {
             dao.update(task)

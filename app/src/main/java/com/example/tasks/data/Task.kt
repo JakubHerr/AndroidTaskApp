@@ -3,6 +3,7 @@ package com.example.tasks.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.*
 
 @Entity(tableName = "task_table")
 data class Task (
@@ -12,11 +13,8 @@ data class Task (
     @ColumnInfo(name = "task_name")
     var taskName: String = "",
 
-    @ColumnInfo(name = "date")
-    var date: Long = 0L,
-
-    @ColumnInfo(name = "time")
-    var time: Long = 0L,
+    @ColumnInfo(name = "deadline")
+    var deadline: Calendar = Calendar.getInstance().apply { timeInMillis = 0L },
 
     @ColumnInfo(name = "time_estimate")
     var timeEstimate: Int = 0,

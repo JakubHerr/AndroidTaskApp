@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tasks.databinding.TaskItemBinding
 import com.example.tasks.data.Task
-import com.example.tasks.extensions.toDate
+import com.example.tasks.extensions.toDeadline
 
 class TaskItemAdapter(private val itemClickListener: (id: Long) -> Unit,
                       private val checkboxClickListener: (id: Long) -> Unit)
@@ -34,8 +34,8 @@ class TaskItemAdapter(private val itemClickListener: (id: Long) -> Unit,
         fun bind(task: Task, itemClickListener: (id: Long) -> Unit, checkboxClickListener: (id: Long) -> Unit) {
             binding.task = task
 
-            task.date.let {
-                binding.date.text = it.toDate()
+            task.deadline.let {
+                binding.date.text = it.timeInMillis.toDeadline()
             }
 
             binding.checkbox.setOnClickListener {

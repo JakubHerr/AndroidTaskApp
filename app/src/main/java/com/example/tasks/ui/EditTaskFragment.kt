@@ -6,8 +6,7 @@ import android.widget.TextView
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.tasks.R
-import com.example.tasks.extensions.toDate
-import com.example.tasks.extensions.toTime
+import com.example.tasks.extensions.toDeadline
 
 class EditTaskFragment : TaskFragment() {
     private val args: EditTaskFragmentArgs by navArgs()
@@ -27,8 +26,7 @@ class EditTaskFragment : TaskFragment() {
             taskName.setText(task.taskName, TextView.BufferType.EDITABLE)
             taskName.setSelection(task.taskName.length)
 
-            dateBtn.text = task.date.toDate()
-            timeBtn.text = task.time.toTime()
+            deadlineBtn.text = task.deadline.timeInMillis.toDeadline()
 
             binding.modifyTask.setOnClickListener {
                 task.taskName = taskName.text.toString()

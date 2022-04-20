@@ -5,18 +5,15 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.example.tasks.R
 import com.example.tasks.data.Task
-import com.example.tasks.extensions.toDate
-import com.example.tasks.extensions.toTime
+import com.example.tasks.extensions.toDeadline
 
 class AddTaskFragment : TaskFragment() {
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         task = Task()
 
         binding.apply {
-            dateBtn.text = task.date.toDate()
-            timeBtn.text = task.time.toTime()
+            deadlineBtn.text = task.deadline.timeInMillis.toDeadline()
 
             modifyTask.contentDescription = "Add task"
             modifyTask.setOnClickListener {
@@ -31,7 +28,5 @@ class AddTaskFragment : TaskFragment() {
             }
             deleteButton.text = getString(R.string.cancel_button)
         }
-
-
     }
 }

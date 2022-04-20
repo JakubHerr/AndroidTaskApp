@@ -23,27 +23,15 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/date_btn"
+            android:id="@+id/deadline_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:contentDescription="@string/date_picker_description"
             app:icon="@drawable/ic_baseline_calendar_month_24"
-            tools:text="No date"
+            tools:text="No deadline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/name_layout" />
-
-        <Button
-            android:id="@+id/time_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:contentDescription="@string/time_picker_description"
-            app:icon="@drawable/ic_baseline_schedule_24"
-            tools:text="No time"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/date_btn" />
-
 
         <Button
             android:id="@+id/delete_button"
@@ -61,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/time_btn"
+            app:layout_constraintTop_toBottomOf="@+id/deadline_btn"
             android:text="priority"/>
 
 

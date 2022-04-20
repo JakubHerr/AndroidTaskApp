@@ -30,13 +30,13 @@ interface TaskDao {
     fun getAllCompleted(): LiveData<List<Task>>
 
     //DEADLINE RELATED QUERIES
-    @Query("SELECT * FROM task_table WHERE date > :present AND NOT task_done ORDER BY date ASC")
+    @Query("SELECT * FROM task_table WHERE deadline > :present AND NOT task_done ORDER BY deadline ASC")
     fun getAllFutureByDeadlineAsc(present: Long): LiveData<List<Task>>
 
-    @Query("SELECT * FROM task_table WHERE date < :present AND date IS NOT 0 AND NOT task_done ORDER BY date ASC")
+    @Query("SELECT * FROM task_table WHERE deadline < :present AND deadline IS NOT 0 AND NOT task_done ORDER BY deadline ASC")
     fun getAllOverdueByDeadlineAsc(present: Long): LiveData<List<Task>>
 
-    @Query("SELECT * FROM task_table WHERE date IS 0 AND NOT task_done ")
+    @Query("SELECT * FROM task_table WHERE deadline IS 0 AND NOT task_done ")
     fun getAllWithoutDeadline() : LiveData<List<Task>>
 
     //PRIORITY RELATED QUERIES
