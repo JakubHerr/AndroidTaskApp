@@ -1,5 +1,6 @@
 package com.example.tasks
 
+import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -8,12 +9,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
+import android.widget.Toast
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -26,23 +27,24 @@ class MainActivity : AppCompatActivity() {
 
         createNotificationChannel()
 
-        val intent = Intent(this, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-
-        val notification = NotificationCompat.Builder(this, "channel id")
-            .setSmallIcon(R.drawable.ic_baseline_library_add_check_24)
-            .setContentTitle("Task app")
-            .setContentText("You have 2 deadlines today")
-            .setContentIntent(pendingIntent)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT).build()
-
-        val manager = NotificationManagerCompat.from(this)
-
         findViewById<Button>(R.id.notification_btn).setOnClickListener {
-            manager.notify(1,notification)
+            scheduleNotification()
         }
+    }
+
+    private fun scheduleNotification() {
+        val intent = Intent(applicationContext, Notification::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(applicationContext,
+            1,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val time = Calendar.getInstance()
+        time.add(Calendar.MINUTE,1)
+
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,time.timeInMillis,pendingIntent)
+        Toast.makeText(this,"Notification set to one minute from now",Toast.LENGTH_LONG).show()
     }
 
     private fun createNotificationChannel() {
