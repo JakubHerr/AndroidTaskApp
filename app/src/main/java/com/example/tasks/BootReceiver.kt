@@ -9,7 +9,6 @@ import android.util.Log
 import java.util.*
 
 class BootReceiver : BroadcastReceiver() {
-
     //set an alarm one minutes after receiving boot_completed for testing purposes
     override fun onReceive(context: Context, intent: Intent) {
         Log.d("BootReceiver","some broadcast was received")

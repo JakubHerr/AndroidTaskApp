@@ -17,6 +17,7 @@ class Notification : BroadcastReceiver() {
             .setContentTitle("Task app")
             .setContentText("You have 2 deadlines today")
             .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
 

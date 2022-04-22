@@ -1,5 +1,6 @@
 package com.example.tasks.ui
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.util.Log
@@ -7,10 +8,12 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.MenuRes
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.tasks.R
 import com.example.tasks.data.Task
 import com.example.tasks.databinding.ModifyTaskBinding
@@ -47,6 +50,27 @@ abstract  class TaskFragment: Fragment() {
         binding.priority.setOnClickListener { setPriority(it,R.menu.menu_priority) }
 
         return binding.root
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        //TODO bottom navigation should also trigger this warning
+        requireActivity().onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showAlertDialog()
+            }
+        })
+    }
+
+    private fun showAlertDialog() {
+        AlertDialog.Builder(requireContext())
+            .setMessage("Unsaved changes will be lost")
+            .setPositiveButton("OK") { _,_ ->
+                findNavController().navigateUp()
+            }
+            .setNegativeButton("Cancel") { _,_ ->}
+            .show()
     }
 
     private fun setDate() {
