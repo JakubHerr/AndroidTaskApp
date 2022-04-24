@@ -68,4 +68,8 @@ class TaskViewModel @Inject constructor (private val dao: TaskDao) : ViewModel()
     fun retrieveTask(taskId: Long) : LiveData<Task> {
         return dao.get(taskId)
     }
+
+    fun retrieveNextTask(present: Long) : LiveData<Task> {
+        return  dao.getNextDeadline(present)
+    }
 }

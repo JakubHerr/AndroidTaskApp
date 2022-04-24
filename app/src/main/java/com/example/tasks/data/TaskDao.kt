@@ -39,6 +39,9 @@ interface TaskDao {
     @Query("SELECT * FROM task_table WHERE deadline IS 0 AND NOT task_done ")
     fun getAllWithoutDeadline() : LiveData<List<Task>>
 
+    @Query("SELECT * FROM task_table where deadline > :present AND NOT task_done ORDER BY deadline ASC LIMIT 1")
+    fun getNextDeadline(present: Long) : LiveData<Task>
+
     //PRIORITY RELATED QUERIES
     @Query("SELECT * FROM task_table WHERE priority = 0 AND NOT task_done ")
     fun getNoPriority() : LiveData<List<Task>>

@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.navigation.fragment.NavHostFragment
@@ -24,6 +25,14 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.NavHostFragment) as NavHostFragment
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
         bottomNav.setupWithNavController(navHostFragment.navController)
+
+        //hiding bottom navigation prevents escaping from unsaved tasks
+        navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
+            bottomNav.visibility = when (destination.id) {
+                R.id.addTaskFragment, R.id.editTaskFragment  -> View.GONE
+                else -> View.VISIBLE
+            }
+        }
 
         createNotificationChannel()
 

@@ -55,7 +55,6 @@ abstract  class TaskFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //TODO bottom navigation should also trigger this warning
         requireActivity().onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 showAlertDialog()
@@ -79,14 +78,19 @@ abstract  class TaskFragment: Fragment() {
             .setSelection(if(task.deadline.timeInMillis == 0L) MaterialDatePicker.todayInUtcMilliseconds() else task.deadline.timeInMillis)
             .build()
         datePicker.show(childFragmentManager,"datePicker")
+
         datePicker.addOnPositiveButtonClickListener {
             Log.d("setDate","timestamp of selection: ${datePicker.selection}")
             task.deadline.timeInMillis = datePicker.selection!!
             setTime()
         }
+
         datePicker.addOnNegativeButtonClickListener {
-            task.deadline.timeInMillis = 0L
-            binding.deadlineBtn.text = task.deadline.timeInMillis.toDeadline()
+            cancelDeadline()
+        }
+
+        datePicker.addOnNegativeButtonClickListener {
+            cancelDeadline()
         }
     }
 
@@ -107,9 +111,17 @@ abstract  class TaskFragment: Fragment() {
         }
 
         timePicker.addOnNegativeButtonClickListener {
-            task.deadline.timeInMillis = 0L
-            binding.deadlineBtn.text = task.deadline.timeInMillis.toDeadline()
+            cancelDeadline()
         }
+
+        timePicker.addOnNegativeButtonClickListener {
+            cancelDeadline()
+        }
+    }
+
+    private fun cancelDeadline() {
+        task.deadline.timeInMillis = 0L
+        binding.deadlineBtn.text = task.deadline.timeInMillis.toDeadline()
     }
 
     private fun setPriority(v: View, @MenuRes menuRes: Int) {
