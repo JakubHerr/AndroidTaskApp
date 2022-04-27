@@ -34,9 +34,9 @@ class TaskListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //bind the viewmodel to the layout
         binding.vm = viewModel
-
-        setUpRecyclerView()
+        viewModel.refreshDeadlines()
         handleMenu()
+        setUpRecyclerView()
 
         //navigate to new task UI
         binding.addTaskFab.setOnClickListener {

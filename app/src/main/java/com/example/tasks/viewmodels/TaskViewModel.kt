@@ -15,20 +15,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TaskViewModel @Inject constructor (private val dao: TaskDao) : ViewModel() {
-    //TODO deadline based sorts should be updated periodically to stay relevant
-    private val sortedByFutureDeadline = dao.getAllFutureByDeadlineAsc(Clock.System.now().toEpochMilliseconds())
-    private val sortedByOverdueDeadline = dao.getAllOverdueByDeadlineAsc(Clock.System.now().toEpochMilliseconds())
+    private var sortedByFutureDeadline = dao.getAllFutureByDeadlineAsc(Clock.System.now().toEpochMilliseconds())
+    private var sortedByOverdueDeadline = dao.getAllOverdueByDeadlineAsc(Clock.System.now().toEpochMilliseconds())
     private val noDeadline = dao.getAllWithoutDeadline()
 
     private val completed = Category("Completed",dao.getAllCompleted())
 
     //reminder: do NOT mutate lists passed to DiffUtil, create a new list instead
-    private val deadline = listOf(
+    private var deadline = listOf(
         Category("Overdue",sortedByOverdueDeadline),
         Category("Future",sortedByFutureDeadline),
         Category("No date",noDeadline))
 
-    private val deadlineWithCompleted = listOf(
+    private var deadlineWithCompleted = listOf(
         Category("Overdue",sortedByOverdueDeadline),
         Category("Future",sortedByFutureDeadline),
         Category("No date",noDeadline),
@@ -51,6 +50,34 @@ class TaskViewModel @Inject constructor (private val dao: TaskDao) : ViewModel()
 
     val categories = MutableLiveData(deadline)
 
+
+    //update deadlines based on current time
+    fun refreshDeadlines() {
+        val now = Clock.System.now()
+        sortedByOverdueDeadline = dao.getAllOverdueByDeadlineAsc(now.toEpochMilliseconds())
+        sortedByFutureDeadline = dao.getAllFutureByDeadlineAsc(now.toEpochMilliseconds())
+
+        val newDeadlines = listOf(
+            Category("Overdue",sortedByOverdueDeadline),
+            Category("Future",sortedByFutureDeadline),
+            Category("No date",noDeadline))
+
+        val newDeadlinesWithCompleted = listOf(
+            Category("Overdue",sortedByOverdueDeadline),
+            Category("Future",sortedByFutureDeadline),
+            Category("No date",noDeadline),
+            completed)
+
+        //if deadlines are currently shown, update them
+        when(categories.value) {
+            deadline -> categories.value = newDeadlines
+            deadlineWithCompleted -> categories.value = newDeadlinesWithCompleted
+        }
+
+        deadline = newDeadlines
+        deadlineWithCompleted = newDeadlinesWithCompleted
+    }
+
     fun toggleCompleted() {
         categories.value = when(categories.value) {
             priority -> priorityWithCompleted
@@ -65,7 +92,7 @@ class TaskViewModel @Inject constructor (private val dao: TaskDao) : ViewModel()
         categories.value = when(categories.value) {
             deadlineWithCompleted -> priorityWithCompleted
             deadline -> priority
-            else -> null
+            else -> categories.value
         }
     }
 
@@ -73,7 +100,7 @@ class TaskViewModel @Inject constructor (private val dao: TaskDao) : ViewModel()
         categories.value = when(categories.value) {
             priorityWithCompleted -> deadlineWithCompleted
             priority -> deadline
-            else -> null
+            else -> categories.value
         }
     }
 
