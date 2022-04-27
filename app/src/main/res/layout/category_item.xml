@@ -16,6 +16,7 @@
         android:padding="8dp"
         android:textSize="16sp"
         android:visibility="visible"
+        style="@style/MyCardView"
         app:cardCornerRadius="4dp"
         app:cardElevation="4dp">
 
@@ -44,6 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
                     android:contentDescription="@string/visibility_toggle_description"
+                    style="@style/MyImageButton"
                     android:minHeight="48dp"
                     android:src="@drawable/ic_baseline_keyboard_arrow_left_24" />
             </LinearLayout>
@@ -53,6 +55,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/task_item"
+                tools:itemCount="4"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>

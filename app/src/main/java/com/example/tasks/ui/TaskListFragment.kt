@@ -52,14 +52,25 @@ class TaskListFragment : Fragment() {
             viewModel.completeTask(it)
         })
         binding.categoryRecycler.adapter = adapter
-        adapter.submitList(viewModel.deadline)
+
+        viewModel.categories.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+        }
     }
 
-    //TODO add menu functionality
     private fun handleMenu() {
         binding.topAppBar.setOnMenuItemClickListener {
             when(it.itemId) {
                 R.id.completed -> {
+                    viewModel.toggleCompleted()
+                    true
+                }
+                R.id.sort_by_deadline -> {
+                    viewModel.sortByDeadline()
+                    true
+                }
+                R.id.sort_by_priority -> {
+                    viewModel.sortByPriority()
                     true
                 }
                 else -> false

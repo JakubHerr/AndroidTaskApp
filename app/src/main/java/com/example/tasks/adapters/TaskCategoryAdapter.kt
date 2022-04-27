@@ -36,8 +36,11 @@ class TaskCategoryAdapter(
         fun bind(category: Category,lifecycleOwner: LifecycleOwner, clickListener: (id: Long) -> Unit, checkboxClickListener: (id: Long) -> Unit) {
             binding.category = category
 
+            //set adapter for displaying single tasks
             val taskAdapter = TaskItemAdapter(clickListener, checkboxClickListener)
+            binding.taskList.adapter = taskAdapter
 
+            //hide list of tasks in this category when collapse button is pressed
             binding.collapseButton.setOnClickListener {
                 binding.taskList.visibility = when(binding.taskList.visibility) {
                     View.VISIBLE -> View.GONE
@@ -45,10 +48,9 @@ class TaskCategoryAdapter(
                 }
             }
 
-            binding.taskList.adapter = taskAdapter
             category.tasks.observe(lifecycleOwner) { newData ->
                 //TODO fix, card is not visible, but leaves a gap in recyclerview
-                binding.card.visibility  = if(newData.isEmpty()) View.GONE else View.VISIBLE
+                //binding.card.visibility  = if(newData.isEmpty()) View.GONE else View.VISIBLE
                 taskAdapter.submitList(newData)
             }
 

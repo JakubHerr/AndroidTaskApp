@@ -2,6 +2,7 @@ package com.example.tasks.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tasks.data.Category
@@ -14,27 +15,67 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TaskViewModel @Inject constructor (private val dao: TaskDao) : ViewModel() {
+    //TODO deadline based sorts should be updated periodically to stay relevant
     private val sortedByFutureDeadline = dao.getAllFutureByDeadlineAsc(Clock.System.now().toEpochMilliseconds())
     private val sortedByOverdueDeadline = dao.getAllOverdueByDeadlineAsc(Clock.System.now().toEpochMilliseconds())
     private val noDeadline = dao.getAllWithoutDeadline()
 
-    val deadline = mutableListOf(
+    private val completed = Category("Completed",dao.getAllCompleted())
+
+    //reminder: do NOT mutate lists passed to DiffUtil, create a new list instead
+    private val deadline = listOf(
         Category("Overdue",sortedByOverdueDeadline),
         Category("Future",sortedByFutureDeadline),
         Category("No date",noDeadline))
 
-    val priority = listOf(
-        Category("No", dao.getNoPriority()),
-        Category("Low",dao.getLowPriority()),
+    private val deadlineWithCompleted = listOf(
+        Category("Overdue",sortedByOverdueDeadline),
+        Category("Future",sortedByFutureDeadline),
+        Category("No date",noDeadline),
+        completed)
+
+    private val priority = listOf(
+        Category("High",dao.getHighPriority()),
         Category("Medium",dao.getMediumPriority()),
-        Category("High",dao.getHighPriority())
+        Category("Low",dao.getLowPriority()),
+        Category("No", dao.getNoPriority())
     )
 
-    val default = listOf(
-        Category("Tasks",dao.getAll())
+    private val priorityWithCompleted = listOf(
+        Category("High",dao.getHighPriority()),
+        Category("Medium",dao.getMediumPriority()),
+        Category("Low",dao.getLowPriority()),
+        Category("No", dao.getNoPriority()),
+        completed
     )
 
-    private val completed = Category("Completed",dao.getAllCompleted())
+    val categories = MutableLiveData(deadline)
+
+    fun toggleCompleted() {
+        categories.value = when(categories.value) {
+            priority -> priorityWithCompleted
+            priorityWithCompleted -> priority
+            deadline -> deadlineWithCompleted
+            deadlineWithCompleted -> deadline
+            else -> null
+        }
+    }
+
+    fun sortByPriority() {
+        categories.value = when(categories.value) {
+            deadlineWithCompleted -> priorityWithCompleted
+            deadline -> priority
+            else -> null
+        }
+    }
+
+    fun sortByDeadline() {
+        categories.value = when(categories.value) {
+            priorityWithCompleted -> deadlineWithCompleted
+            priority -> deadline
+            else -> null
+        }
+    }
 
     fun addTask(task: Task) {
         Log.d("TaskViewModel","Added task with timestamp ${task.deadline}")

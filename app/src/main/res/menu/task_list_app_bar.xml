@@ -4,6 +4,8 @@
     <item
         android:id="@+id/completed"
         android:title="Show completed"/>
-    <item android:title="Sort"/>
-    <item android:title="Placeholder"/>
+    <item android:title="Sort by deadline"
+        android:id="@+id/sort_by_deadline"/>
+    <item android:id="@+id/sort_by_priority"
+        android:title="Sort by priority"/>
 </menu>

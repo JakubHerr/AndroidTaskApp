@@ -35,10 +35,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         createNotificationChannel()
-
-        findViewById<Button>(R.id.notification_btn).setOnClickListener {
-            scheduleNotification()
-        }
     }
 
     private fun scheduleNotification() {
