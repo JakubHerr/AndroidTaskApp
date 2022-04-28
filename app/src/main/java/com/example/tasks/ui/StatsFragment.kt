@@ -36,7 +36,8 @@ class StatsFragment : Fragment() {
         nextTask.observe(viewLifecycleOwner) {
             if(nextTask.value != null) setUpCountdown(it)
             else {
-                binding.taskName.text = "You have no future deadlines"
+                binding.prompt.text = "You have no future deadlines"
+                binding.taskName.visibility = View.GONE
                 binding.countdown.visibility = View.GONE
             }
         }

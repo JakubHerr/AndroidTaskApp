@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.tasks.R
@@ -75,6 +76,9 @@ class TaskListFragment : Fragment() {
                 }
                 else -> false
             }
+        }
+        binding.topAppBar.setNavigationOnClickListener {
+            Toast.makeText(context,"Work in progress",Toast.LENGTH_SHORT).show()
         }
     }
 

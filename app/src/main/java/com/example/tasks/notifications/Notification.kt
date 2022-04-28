@@ -16,6 +16,7 @@ class Notification : BroadcastReceiver() {
         val appIntent = Intent(context, MainActivity::class.java)
         val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, appIntent, PendingIntent.FLAG_IMMUTABLE)
 
+        //TODO replace placeholder text
         val notification = NotificationCompat.Builder(context, "channel id")
             .setSmallIcon(R.drawable.ic_baseline_library_add_check_24)
             .setContentTitle("Task app")

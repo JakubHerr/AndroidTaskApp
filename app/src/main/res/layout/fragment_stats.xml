@@ -2,29 +2,32 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="16dp"
         tools:context=".ui.StatsFragment">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/prompt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
             android:text="Next task:"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/task_name"
+            app:layout_constraintEnd_toEndOf="@+id/task_name"
+            app:layout_constraintStart_toStartOf="@+id/task_name" />
 
         <TextView
             android:id="@+id/task_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toEndOf="@+id/textView"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="32sp"
+            android:textAllCaps="true"
+            app:layout_constraintBottom_toTopOf="@+id/countdown"
+            app:layout_constraintEnd_toEndOf="@+id/countdown"
+            app:layout_constraintStart_toStartOf="@+id/countdown" />
 
         <Chronometer
             android:id="@+id/countdown"
@@ -32,8 +35,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:countDown="true"
-            app:layout_constraintStart_toStartOf="@+id/task_name"
-            app:layout_constraintTop_toBottomOf="@+id/task_name" />
+            android:textSize="32sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -13,6 +13,7 @@ data class Task (
     @ColumnInfo(name = "task_name")
     var taskName: String = "",
 
+    //TODO use LocalDateTime with timezone offset instead
     @ColumnInfo(name = "deadline")
     var deadline: Calendar = Calendar.getInstance().apply { timeInMillis = 0L },
 

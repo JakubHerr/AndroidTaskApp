@@ -7,6 +7,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tasks.R
 import com.example.tasks.data.Category
 import com.example.tasks.databinding.CategoryItemBinding
 
@@ -43,8 +44,14 @@ class TaskCategoryAdapter(
             //hide list of tasks in this category when collapse button is pressed
             binding.collapseButton.setOnClickListener {
                 binding.taskList.visibility = when(binding.taskList.visibility) {
-                    View.VISIBLE -> View.GONE
-                    else -> View.VISIBLE
+                    View.VISIBLE -> {
+                        binding.collapseButton.setImageResource(R.drawable.ic_baseline_keyboard_arrow_left_24)
+                        View.GONE
+                    }
+                    else -> {
+                        binding.collapseButton.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
+                        View.VISIBLE
+                    }
                 }
             }
 

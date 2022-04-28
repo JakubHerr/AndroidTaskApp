@@ -1,9 +1,7 @@
 package com.example.tasks.di
 
 import android.content.Context
-import androidx.room.Room
 import com.example.tasks.data.AppDatabase
-import com.example.tasks.other.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,11 +17,7 @@ object AppModule {
     @Singleton
     fun provideAppDatabase(
         @ApplicationContext app: Context
-        ) = Room.databaseBuilder(
-        app,
-        AppDatabase::class.java,
-        Constants.DATABASE_NAME
-    ).build()
+        ) = AppDatabase.getInstance(app)
 
     @Provides
     @Singleton

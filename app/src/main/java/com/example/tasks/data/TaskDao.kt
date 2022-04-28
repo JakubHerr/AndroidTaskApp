@@ -10,6 +10,9 @@ import androidx.room.Update
 @Dao
 interface TaskDao {
     @Insert
+    fun prepopulate(task: Task)
+
+    @Insert
     suspend fun insert(task: Task)
     @Update
     suspend fun update(task: Task)

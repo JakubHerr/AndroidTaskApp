@@ -47,7 +47,7 @@
                     android:contentDescription="@string/visibility_toggle_description"
                     style="@style/MyImageButton"
                     android:minHeight="48dp"
-                    android:src="@drawable/ic_baseline_keyboard_arrow_left_24" />
+                    android:src="@drawable/ic_baseline_keyboard_arrow_down_24" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView

@@ -10,8 +10,9 @@ import com.example.tasks.notifications.Notification
 import java.util.*
 
 class BootReceiver : BroadcastReceiver() {
+    //after reboot, a test notification with placeholder text is scheduled
     override fun onReceive(context: Context, intent: Intent) {
-        Log.d("BootReceiver","some broadcast was received")
+        Log.d("Tasks BootReceiver","some broadcast was received")
         if (intent.action == "android.intent.action.LOCKED_BOOT_COMPLETED") {
             Log.d("Tasks BootReceiver","${intent.action} was received")
 
