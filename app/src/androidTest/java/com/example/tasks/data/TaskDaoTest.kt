@@ -14,6 +14,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
@@ -43,7 +44,7 @@ class TaskDaoTest {
     @Test
     fun insertTask() = runBlockingTest {
         val taskId = 30L
-        val task = Task(taskId = taskId, taskName = "test", date = 1234L, taskDone = true)
+        val task = Task(taskId = taskId, taskName = "test", deadline = Calendar.getInstance(), taskDone = true)
         taskDao.insert(task)
 
         val retrievedTask = taskDao.get(taskId).getOrAwaitValue()
@@ -66,7 +67,7 @@ class TaskDaoTest {
     @Test
     fun deleteTask() = runBlockingTest {
         val taskId = 30L
-        val task = Task(taskId = taskId, taskName = "test", date = 1234L, taskDone = true)
+        val task = Task(taskId = taskId, taskName = "test", deadline = Calendar.getInstance(), taskDone = true)
         taskDao.insert(task)
         taskDao.delete(task)
         val retrievedTask = taskDao.get(taskId).getOrAwaitValue()
@@ -92,7 +93,7 @@ class TaskDaoTest {
 
     @Test
     fun getValidTask() = runBlockingTest {
-        taskDao.insert(Task(taskId = 123,taskName = "valid task"))
+        taskDao.insert(Task(taskId = 123, taskName = "valid task"))
         assertThat(taskDao.get(123).getOrAwaitValue()).isNotNull()
     }
 

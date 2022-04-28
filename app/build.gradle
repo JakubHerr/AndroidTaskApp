@@ -85,3 +85,11 @@ dependencies {
 kapt {
     correctErrorTypes = true
 }
+
+//this will run all unit tests before installing the app
+//will be useful when unit tests are added
+//tasks.whenTaskAdded { task ->
+//    if(task.name == "assembleDebug") {
+//        task.finalizedBy "test"
+//    }
+//}
