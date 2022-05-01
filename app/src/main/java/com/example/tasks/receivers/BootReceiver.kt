@@ -6,29 +6,49 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.example.tasks.notifications.Notification
+import com.example.tasks.data.TaskDao
+import com.example.tasks.extensions.alarmManager
+import com.example.tasks.notifications.TaskReminder
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class BootReceiver : BroadcastReceiver() {
-    //after reboot, a test notification with placeholder text is scheduled
+    @Inject
+    lateinit var dao: TaskDao
+
     override fun onReceive(context: Context, intent: Intent) {
-        Log.d("Tasks BootReceiver","some broadcast was received")
         if (intent.action == "android.intent.action.LOCKED_BOOT_COMPLETED") {
             Log.d("Tasks BootReceiver","${intent.action} was received")
+            rescheduleAlarms(context)
+        }
+    }
 
-            val time = Calendar.getInstance()
+    private fun rescheduleAlarms(context: Context) = runBlocking {
+        launch {
+            Log.d("Tasks BootReceiver","coroutine started successfully")
+            val alarmManager = context.alarmManager()
 
-            val intentNotification = Intent(context, Notification::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(context.applicationContext,
-                1,
-                intentNotification,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            val taskList = dao.getAllFuture(Calendar.getInstance().timeInMillis)
+            taskList.forEach { task ->
+                //create a pending intent for each task reminder
+                val intentNotification = Intent(context, TaskReminder::class.java)
+                    .putExtra("Task ID",task.taskId)
+                    .putExtra("Task name",task.taskName)
+                    .putExtra("Task description","placeholder text")
 
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                val pendingIntent = PendingIntent.getBroadcast(context.applicationContext,
+                    task.taskId.toInt(),
+                    intentNotification,
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
-            time.add(Calendar.MINUTE,1)
-            Log.d("Tasks BootReceiver","exact alarm set for $time")
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,time.timeInMillis,pendingIntent)
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,task.deadline.timeInMillis,pendingIntent)
+                Log.d("Tasks BootReceiver","exact alarm set for task nr. ${task.taskId} at ${task.deadline}")
+            }
+            if (taskList.isEmpty()) Log.d("Tasks BootReceiver","List of tasks was empty")
         }
     }
 

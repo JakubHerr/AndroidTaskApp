@@ -12,7 +12,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.example.tasks.notifications.Notification
+import com.example.tasks.notifications.TaskReminder
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun scheduleNotification() {
-        val intent = Intent(applicationContext, Notification::class.java)
+        val intent = Intent(applicationContext, TaskReminder::class.java)
         val pendingIntent = PendingIntent.getBroadcast(applicationContext,
             1,
             intent,
@@ -55,10 +55,9 @@ class MainActivity : AppCompatActivity() {
     private fun createNotificationChannel() {
         //minimum SDK is >= 26, no need to check
         val name = getString(R.string.channel_name)
-        val descriptionText = getString(R.string.channel_description)
         val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val channel = NotificationChannel("channel id", name, importance).apply {
-            description = descriptionText
+        val channel = NotificationChannel("Task reminders", name, importance).apply {
+            description = getString(R.string.channel_description)
         }
         // Register the channel with the system
         val notificationManager: NotificationManager =

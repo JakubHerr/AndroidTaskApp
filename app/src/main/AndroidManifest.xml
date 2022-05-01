@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Tasks">
-        <receiver android:name=".notifications.Notification"
+        <receiver android:name=".notifications.TaskReminder"
             android:enabled="true"/>
         <receiver android:name=".receivers.BootReceiver"
             android:exported="true"

@@ -9,6 +9,10 @@ import androidx.room.Update
 
 @Dao
 interface TaskDao {
+    //this function is used to fetch future tasks without waiting for LiveData to update
+    @Query("SELECT * FROM task_table WHERE deadline > :present")
+    suspend fun getAllFuture(present: Long) : List<Task>
+
     @Insert
     fun prepopulate(task: Task)
 
