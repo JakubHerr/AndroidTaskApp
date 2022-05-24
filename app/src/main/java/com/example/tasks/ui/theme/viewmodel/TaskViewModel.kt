@@ -1,4 +1,4 @@
-package com.example.tasks.viewmodels
+package com.example.tasks.ui.theme.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.LiveData
