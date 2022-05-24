@@ -15,14 +15,16 @@ import androidx.compose.ui.unit.dp
 import com.example.tasks.R
 import com.example.tasks.ui.theme.TasksTheme
 
-@Preview
 @Composable
-fun TaskList() {
+fun TaskList(onClick: () -> Unit) {
     val categories = listOf("Overdue", "Future", "No deadline")
     LazyColumn {
         items(categories.size) {
             Category(categories[it], modifier = Modifier.padding(8.dp))
         }
+    }
+    FloatingActionButton(onClick = {onClick()}) {
+        Icon(painter = painterResource(id = R.drawable.ic_baseline_add_24), contentDescription = "Add Task FAB")
     }
 }
 

@@ -2,6 +2,8 @@ package com.example.tasks.di
 
 import android.content.Context
 import com.example.tasks.data.AppDatabase
+import com.example.tasks.data.TaskDao
+import com.example.tasks.ui.theme.viewmodel.TaskViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,4 +24,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideTaskDao(db: AppDatabase) = db.taskDao
+
+    @Provides
+    @Singleton
+    fun provideTaskViewModel(dao: TaskDao) = TaskViewModel(dao)
 }

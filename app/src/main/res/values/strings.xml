@@ -7,7 +7,8 @@
     <string name="no_date_selected">No date</string>
     <string name="time_picker_description">Time picker</string>
     <string name="task_name_prompt">Enter a task name</string>
-    <string name="add_task_button">add task</string>
+    <string name="add_task">add task</string>
+    <string name="edit_task">edit task</string>
     <string name="delete_button">Delete</string>
     <string name="edit_button">Edit</string>
     <string name="cancel_button">Cancel</string>
