@@ -11,20 +11,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.ViewModel
-import androidx.navigation.*
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.tasks.R
 import com.example.tasks.Screen
 import com.example.tasks.ui.screen.TaskAddScreen
 import com.example.tasks.ui.screen.TaskEditScreen
 import com.example.tasks.ui.screen.TaskList
-import com.example.tasks.ui.theme.viewmodel.TaskViewModel
 
 @Preview(showBackground = true)
 @Composable
@@ -38,14 +39,17 @@ fun Navigation() {
         scaffoldState = scaffoldState,
         topBar = { CustomTopAppBar(currentDestination) },
         bottomBar = { CustomBottomNavigation(navController, currentDestination) },
-        backgroundColor = MaterialTheme.colors.background
+        backgroundColor = MaterialTheme.colors.background,
+        floatingActionButtonPosition = FabPosition.End,
+        floatingActionButton = {
+            when (currentDestination?.route) {
+                Screen.TaskList.route -> AddTaskFab(navController = navController)
+            }
+        }
     ) {
         NavHost(navController = navController, startDestination = Screen.TaskList.route) {
             composable(Screen.TaskList.route) {
-                TaskList {
-                    Log.d("Navigation","AddTask FAB pressed")
-                    navController.navigate(Screen.AddTask.route)
-                }
+                TaskList()
             }
             composable(route = Screen.AddTask.route) {
                 TaskAddScreen()
@@ -55,7 +59,7 @@ fun Navigation() {
                     type = NavType.LongType
                 }
                 )) {
-                TaskEditScreen(navController,it.arguments?.getLong("taskId"))
+                TaskEditScreen(navController, it.arguments?.getLong("taskId"))
             }
 
 
@@ -88,7 +92,8 @@ fun CustomTopAppBar(currentDestination: NavDestination?) {
         navigationIcon = {
             Icon(
                 painter = painterResource(id = R.drawable.ic_baseline_menu_24),
-                contentDescription = "Placeholder")
+                contentDescription = "Placeholder"
+            )
         }
     )
 }
@@ -121,5 +126,18 @@ fun CustomBottomNavigation(navController: NavHostController, currentDestination:
                 label = { Text(stringResource(screen.resourceId)) },
             )
         }
+    }
+}
+
+@Composable
+fun AddTaskFab(navController: NavHostController) {
+    FloatingActionButton(onClick = {
+        Log.d("Navigation", "AddTask FAB pressed")
+        navController.navigate(Screen.AddTask.route)
+    }) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_baseline_add_24),
+            contentDescription = "Add Task FAB"
+        )
     }
 }

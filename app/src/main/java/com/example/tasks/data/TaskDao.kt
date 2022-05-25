@@ -1,17 +1,16 @@
 package com.example.tasks.data
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TaskDao {
-    //this function is used to fetch future tasks without waiting for LiveData to update
     @Query("SELECT * FROM task_table WHERE deadline > :present")
-    suspend fun getAllFuture(present: Long) : List<Task>
+    fun getAllFuture(present: Long) : List<Task>
 
     @Insert
     fun prepopulate(task: Task)
@@ -28,37 +27,37 @@ interface TaskDao {
     suspend fun delete(task: Task)
 
     @Query("SELECT * FROM task_table WHERE taskId = :key")
-    fun get(key: Long): LiveData<Task>
+    fun get(key: Long): Flow<Task>
 
     @Query("SELECT * FROM task_table ORDER BY taskId ASC")
-    fun getAll(): LiveData<List<Task>>
+    fun getAll(): Flow<List<Task>>
 
     @Query("SELECT * FROM task_table WHERE task_done ORDER BY taskId ASC")
-    fun getAllCompleted(): LiveData<List<Task>>
+    fun getAllCompleted(): Flow<List<Task>>
 
     //DEADLINE RELATED QUERIES
     @Query("SELECT * FROM task_table WHERE deadline > :present AND NOT task_done ORDER BY deadline ASC")
-    fun getAllFutureByDeadlineAsc(present: Long): LiveData<List<Task>>
+    fun getAllFutureByDeadlineAsc(present: Long): Flow<List<Task>>
 
     @Query("SELECT * FROM task_table WHERE deadline < :present AND deadline IS NOT 0 AND NOT task_done ORDER BY deadline ASC")
-    fun getAllOverdueByDeadlineAsc(present: Long): LiveData<List<Task>>
+    fun getAllOverdueByDeadlineAsc(present: Long): Flow<List<Task>>
 
     @Query("SELECT * FROM task_table WHERE deadline IS 0 AND NOT task_done ")
-    fun getAllWithoutDeadline() : LiveData<List<Task>>
+    fun getAllWithoutDeadline() : Flow<List<Task>>
 
     @Query("SELECT * FROM task_table where deadline > :present AND NOT task_done ORDER BY deadline ASC LIMIT 1")
-    fun getNextDeadline(present: Long) : LiveData<Task>
+    fun getNextDeadline(present: Long) : Flow<Task>
 
     //PRIORITY RELATED QUERIES
     @Query("SELECT * FROM task_table WHERE priority = 0 AND NOT task_done ")
-    fun getNoPriority() : LiveData<List<Task>>
+    fun getNoPriority() : Flow<List<Task>>
 
     @Query("SELECT * FROM task_table WHERE priority = 1 AND NOT task_done ")
-    fun getLowPriority() : LiveData<List<Task>>
+    fun getLowPriority() : Flow<List<Task>>
 
     @Query("SELECT * FROM task_table WHERE priority = 2 AND NOT task_done ")
-    fun getMediumPriority() : LiveData<List<Task>>
+    fun getMediumPriority() : Flow<List<Task>>
 
     @Query("SELECT * FROM task_table WHERE priority = 3 AND NOT task_done ")
-    fun getHighPriority() : LiveData<List<Task>>
+    fun getHighPriority() : Flow<List<Task>>
 }

@@ -1,14 +1,14 @@
 package com.example.tasks.ui.theme.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tasks.data.Category
 import com.example.tasks.data.Task
 import com.example.tasks.data.TaskDao
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import javax.inject.Inject
@@ -19,6 +19,16 @@ class TaskViewModel @Inject constructor (private val dao: TaskDao) : ViewModel()
     private var sortedByOverdueDeadline = dao.getAllOverdueByDeadlineAsc(Clock.System.now().toEpochMilliseconds())
     private val noDeadline = dao.getAllWithoutDeadline()
 
+    val test = MutableStateFlow(emptyList<Task>())
+
+    init {
+        viewModelScope.launch {
+            noDeadline.collect {
+                test.value = it
+            }
+        }
+    }
+
     private val completed = Category("Completed",dao.getAllCompleted())
 
     //reminder: do NOT mutate lists passed to DiffUtil, create a new list instead
@@ -27,85 +37,85 @@ class TaskViewModel @Inject constructor (private val dao: TaskDao) : ViewModel()
         Category("Future",sortedByFutureDeadline),
         Category("No date",noDeadline))
 
-    private var deadlineWithCompleted = listOf(
-        Category("Overdue",sortedByOverdueDeadline),
-        Category("Future",sortedByFutureDeadline),
-        Category("No date",noDeadline),
-        completed)
+//    private var deadlineWithCompleted = listOf(
+//        Category("Overdue",sortedByOverdueDeadline),
+//        Category("Future",sortedByFutureDeadline),
+//        Category("No date",noDeadline),
+//        completed)
+//
+//    private val priority = listOf(
+//        Category("High",dao.getHighPriority()),
+//        Category("Medium",dao.getMediumPriority()),
+//        Category("Low",dao.getLowPriority()),
+//        Category("No", dao.getNoPriority())
+//    )
+//
+//    private val priorityWithCompleted = listOf(
+//        Category("High",dao.getHighPriority()),
+//        Category("Medium",dao.getMediumPriority()),
+//        Category("Low",dao.getLowPriority()),
+//        Category("No", dao.getNoPriority()),
+//        completed
+//    )
 
-    private val priority = listOf(
-        Category("High",dao.getHighPriority()),
-        Category("Medium",dao.getMediumPriority()),
-        Category("Low",dao.getLowPriority()),
-        Category("No", dao.getNoPriority())
-    )
-
-    private val priorityWithCompleted = listOf(
-        Category("High",dao.getHighPriority()),
-        Category("Medium",dao.getMediumPriority()),
-        Category("Low",dao.getLowPriority()),
-        Category("No", dao.getNoPriority()),
-        completed
-    )
-
-    val categories = MutableLiveData(deadline)
+    val categories = deadline
 
 
     //update deadlines based on current time
-    fun refreshDeadlines() {
-        val now = Clock.System.now()
-        sortedByOverdueDeadline = dao.getAllOverdueByDeadlineAsc(now.toEpochMilliseconds())
-        sortedByFutureDeadline = dao.getAllFutureByDeadlineAsc(now.toEpochMilliseconds())
-
-        val newDeadlines = listOf(
-            Category("Overdue",sortedByOverdueDeadline),
-            Category("Future",sortedByFutureDeadline),
-            Category("No date",noDeadline))
-
-        val newDeadlinesWithCompleted = listOf(
-            Category("Overdue",sortedByOverdueDeadline),
-            Category("Future",sortedByFutureDeadline),
-            Category("No date",noDeadline),
-            completed)
-
-        //if deadlines are currently shown, update them
-        when(categories.value) {
-            deadline -> categories.value = newDeadlines
-            deadlineWithCompleted -> categories.value = newDeadlinesWithCompleted
-        }
-
-        deadline = newDeadlines
-        deadlineWithCompleted = newDeadlinesWithCompleted
-    }
-
-    fun toggleCompleted() {
-        categories.value = when(categories.value) {
-            priority -> priorityWithCompleted
-            priorityWithCompleted -> priority
-            deadline -> deadlineWithCompleted
-            deadlineWithCompleted -> deadline
-            else -> null
-        }
-    }
-
-    fun sortByPriority() {
-        categories.value = when(categories.value) {
-            deadlineWithCompleted -> priorityWithCompleted
-            deadline -> priority
-            else -> categories.value
-        }
-    }
-
-    fun sortByDeadline() {
-        categories.value = when(categories.value) {
-            priorityWithCompleted -> deadlineWithCompleted
-            priority -> deadline
-            else -> categories.value
-        }
-    }
+//    fun refreshDeadlines() {
+//        val now = Clock.System.now()
+//        sortedByOverdueDeadline = dao.getAllOverdueByDeadlineAsc(now.toEpochMilliseconds())
+//        sortedByFutureDeadline = dao.getAllFutureByDeadlineAsc(now.toEpochMilliseconds())
+//
+//        val newDeadlines = listOf(
+//            Category("Overdue",sortedByOverdueDeadline),
+//            Category("Future",sortedByFutureDeadline),
+//            Category("No date",noDeadline))
+//
+//        val newDeadlinesWithCompleted = listOf(
+//            Category("Overdue",sortedByOverdueDeadline),
+//            Category("Future",sortedByFutureDeadline),
+//            Category("No date",noDeadline),
+//            completed)
+//
+//        //if deadlines are currently shown, update them
+//        when(categories.value) {
+//            deadline -> categories.value = newDeadlines
+//            deadlineWithCompleted -> categories.value = newDeadlinesWithCompleted
+//        }
+//
+//        deadline = newDeadlines
+//        deadlineWithCompleted = newDeadlinesWithCompleted
+//    }
+//
+//    fun toggleCompleted() {
+//        categories.value = when(categories.value) {
+//            priority -> priorityWithCompleted
+//            priorityWithCompleted -> priority
+//            deadline -> deadlineWithCompleted
+//            deadlineWithCompleted -> deadline
+//            else -> null
+//        }
+//    }
+//
+//    fun sortByPriority() {
+//        categories.value = when(categories.value) {
+//            deadlineWithCompleted -> priorityWithCompleted
+//            deadline -> priority
+//            else -> categories.value
+//        }
+//    }
+//
+//    fun sortByDeadline() {
+//        categories.value = when(categories.value) {
+//            priorityWithCompleted -> deadlineWithCompleted
+//            priority -> deadline
+//            else -> categories.value
+//        }
+//    }
 
     fun addTask(task: Task) {
-        Log.d("TaskViewModel","Added task with timestamp ${task.deadline}")
+        //Log.d("TaskViewModel","Added task with timestamp ${task.deadline}")
         if(task.taskName.isBlank()) task.taskName = "Untitled"
         viewModelScope.launch {
             dao.insert(task)
@@ -120,7 +130,7 @@ class TaskViewModel @Inject constructor (private val dao: TaskDao) : ViewModel()
     }
 
     fun editTask(task: Task) {
-        Log.d("TaskViewModel","edited task with timestamp ${task.deadline}")
+        //Log.d("TaskViewModel","edited task with timestamp ${task.deadline}")
         if(task.taskName.isBlank()) task.taskName = "Untitled"
         viewModelScope.launch {
             dao.update(task)
@@ -133,11 +143,11 @@ class TaskViewModel @Inject constructor (private val dao: TaskDao) : ViewModel()
         }
     }
 
-    fun retrieveTask(taskId: Long) : LiveData<Task> {
+    fun retrieveTask(taskId: Long) : Flow<Task> {
         return dao.get(taskId)
     }
 
-    fun retrieveNextTask(present: Long) : LiveData<Task> {
+    fun retrieveNextTask(present: Long) : Flow<Task> {
         return  dao.getNextDeadline(present)
     }
 }

@@ -12,25 +12,29 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.tasks.R
+import com.example.tasks.data.Category
 import com.example.tasks.ui.theme.TasksTheme
+import com.example.tasks.ui.theme.viewmodel.TaskViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 @Composable
-fun TaskList(onClick: () -> Unit) {
-    val categories = listOf("Overdue", "Future", "No deadline")
+fun TaskList() {
+    val viewModel = hiltViewModel<TaskViewModel>()
+    val categories = viewModel.categories
     LazyColumn {
         items(categories.size) {
             Category(categories[it], modifier = Modifier.padding(8.dp))
         }
     }
-    FloatingActionButton(onClick = {onClick()}) {
-        Icon(painter = painterResource(id = R.drawable.ic_baseline_add_24), contentDescription = "Add Task FAB")
-    }
 }
 
 @Composable
-fun Category(name: String, modifier: Modifier = Modifier) {
+fun Category(category: Category, modifier: Modifier = Modifier) {
     var isExpanded by remember { mutableStateOf(true) }
+    val viewModel = hiltViewModel<TaskViewModel>()
+    val taskList = viewModel.test.collectAsState()
 
     Surface(
         modifier = modifier
@@ -53,7 +57,7 @@ fun Category(name: String, modifier: Modifier = Modifier) {
                     .fillMaxWidth()
                     .padding(8.dp)
             ) {
-                Text(name)
+                Text(category.name)
                 IconToggleButton(
                     checked = isExpanded,
                     onCheckedChange = { isExpanded = !isExpanded }) {
@@ -66,18 +70,17 @@ fun Category(name: String, modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.size(2.dp))
             if (isExpanded) {
                 Column{
-                    TaskItem()
-                    TaskItem()
-                    TaskItem()
+                    taskList.value.forEach {
+                        TaskItem(name = it.taskName, deadline = "Placeholder")
+                    }
                 }
             }
         }
-
     }
 }
 
 @Composable
-fun TaskItem() {
+fun TaskItem(name: String, deadline: String) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -85,8 +88,8 @@ fun TaskItem() {
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(checked = true, onCheckedChange = {})
-            Text(text = "Placeholder")
+            Text(text = name)
         }
-        Text(text = "July 20 1969", modifier = Modifier.padding(8.dp))
+        Text(text = deadline, modifier = Modifier.padding(8.dp))
     }
 }

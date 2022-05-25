@@ -7,10 +7,7 @@ import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,13 +34,14 @@ fun TaskAddScreen() {
         mutableStateOf("")
     }
 
-    val task by remember {
-        mutableStateOf(Task())
-    }
+//    val task by remember {
+//        mutableStateOf(Task())
+//    }
 
+    val test = MaterialDatePicker.Builder.datePicker()
     val context = LocalContext.current
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         TextField(
             value = name,
             onValueChange = { name = it },
@@ -56,6 +54,10 @@ fun TaskAddScreen() {
         //cancel button
         Button(onClick = { }) {
             Text(text = stringResource(id = R.string.cancel_button))
+        }
+        //priority button
+        Button(onClick = {}) {
+            Text(text = stringResource(id = R.string.priority))
         }
         
         //deadline button
@@ -72,13 +74,12 @@ fun TaskAddScreen() {
                         .setDate(year, month, dayOfMonth)
                         .setTimeOfDay(hourOfDay,minute,0)
                         .build()
-                    task.deadline = deadline
+                    //task.deadline = deadline
                 }
                 TimePickerDialog(context,listener,12,0,true).show()
             }
             dialog.setOnDismissListener {
-                task.deadline = Calendar.Builder().setDate(1970,1,1)
-                    .setTimeOfDay(0,0,0).build()
+                //task.deadline = Calendar.Builder().setDate(1970,1,1).setTimeOfDay(0,0,0).build()
             }
 
             dialog.show()
