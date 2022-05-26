@@ -24,4 +24,7 @@
     <string name="channel_name">Task reminders</string>
     <string name="channel_description">Notifications for upcoming tasks with deadlines</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="sort_by_priority">Sort by priority</string>
+    <string name="sort_by_deadline">Sort by deadline</string>
+    <string name="show_completed">Show completed</string>
 </resources>

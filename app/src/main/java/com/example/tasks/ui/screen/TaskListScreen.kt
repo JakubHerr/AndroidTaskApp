@@ -1,31 +1,28 @@
 package com.example.tasks.ui.screen
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.tasks.R
 import com.example.tasks.data.Category
-import com.example.tasks.ui.theme.TasksTheme
+import com.example.tasks.data.Task
+import com.example.tasks.extensions.toDeadline
 import com.example.tasks.ui.theme.viewmodel.TaskViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 
 @Composable
 fun TaskList() {
     val viewModel = hiltViewModel<TaskViewModel>()
-    val categories = viewModel.categories
+    val categories = viewModel.categories.collectAsState()
     LazyColumn {
-        items(categories.size) {
-            Category(categories[it], modifier = Modifier.padding(8.dp))
+        items(categories.value.size) {
+            Category(categories.value[it], modifier = Modifier.padding(8.dp))
         }
     }
 }
@@ -33,8 +30,7 @@ fun TaskList() {
 @Composable
 fun Category(category: Category, modifier: Modifier = Modifier) {
     var isExpanded by remember { mutableStateOf(true) }
-    val viewModel = hiltViewModel<TaskViewModel>()
-    val taskList = viewModel.test.collectAsState()
+    val taskList = category.tasks.collectAsState()
 
     Surface(
         modifier = modifier
@@ -71,7 +67,7 @@ fun Category(category: Category, modifier: Modifier = Modifier) {
             if (isExpanded) {
                 Column{
                     taskList.value.forEach {
-                        TaskItem(name = it.taskName, deadline = "Placeholder")
+                        TaskItem(it)
                     }
                 }
             }
@@ -80,16 +76,17 @@ fun Category(category: Category, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TaskItem(name: String, deadline: String) {
+fun TaskItem(task: Task) {
+    val viewModel = hiltViewModel<TaskViewModel>()
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(checked = true, onCheckedChange = {})
-            Text(text = name)
+            Checkbox(checked = task.taskDone, onCheckedChange = {viewModel.completeTask(task.taskId)})
+            Text(task.taskName)
         }
-        Text(text = deadline, modifier = Modifier.padding(8.dp))
+        Text(text = task.deadline.timeInMillis.toDeadline(), modifier = Modifier.padding(8.dp))
     }
 }

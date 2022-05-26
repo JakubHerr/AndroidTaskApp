@@ -1,8 +1,8 @@
 package com.example.tasks.data
 
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 data class Category(
     var name: String = "",
-    val tasks: Flow<List<Task>>
+    val tasks: StateFlow<List<Task>>
 )

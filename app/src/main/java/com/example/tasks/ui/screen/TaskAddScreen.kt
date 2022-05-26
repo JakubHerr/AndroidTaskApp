@@ -4,7 +4,6 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.app.TimePickerDialog.OnTimeSetListener
 import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
@@ -16,19 +15,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.example.tasks.R
-import com.example.tasks.Screen
-import com.example.tasks.data.Task
 import com.example.tasks.ui.theme.viewmodel.TaskViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.timepicker.MaterialTimePicker
 import java.util.Calendar
 
 @Preview(showBackground = true, widthDp = 480, heightDp = 854)
 @Composable
 fun TaskAddScreen() {
-//    val viewModel = hiltViewModel<TaskViewModel>()
+    val viewModel = hiltViewModel<TaskViewModel>()
 
     var name by remember {
         mutableStateOf("")
