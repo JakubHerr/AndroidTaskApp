@@ -54,7 +54,7 @@ fun Navigation() {
                 TaskList()
             }
             composable(route = Screen.AddTask.route) {
-                TaskAddScreen()
+                TaskAddScreen(navController)
             }
             composable(route = "${Screen.EditTask.route}/taskId",
                 arguments = listOf(navArgument("taskId") {

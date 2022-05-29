@@ -114,7 +114,6 @@ class TaskViewModel @Inject constructor(private val dao: TaskDao) : ViewModel() 
             priority.remove(Category("Completed", completed))
             deadline.remove(Category("Completed", completed))
         }
-        categories.update { categories.value }
     }
 
     fun addTask(task: Task) {
