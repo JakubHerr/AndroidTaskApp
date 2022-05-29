@@ -2,6 +2,10 @@ package com.example.tasks.di
 
 import android.content.Context
 import com.example.tasks.data.AppDatabase
+import com.example.tasks.data.TaskDao
+import com.example.tasks.ui.viewmodel.TaskAddViewModel
+import com.example.tasks.ui.viewmodel.TaskEditViewModel
+import com.example.tasks.ui.viewmodel.TaskListViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

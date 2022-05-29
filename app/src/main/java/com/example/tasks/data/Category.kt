@@ -1,8 +1,8 @@
 package com.example.tasks.data
 
-import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.StateFlow
 
 data class Category(
     var name: String = "",
-    val tasks: LiveData<List<Task>>
+    val tasks: StateFlow<List<Task>>
 )

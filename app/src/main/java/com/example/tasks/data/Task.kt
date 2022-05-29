@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import java.util.*
 
 @Entity(tableName = "task_table")
-data class Task (
+data class Task(
     @PrimaryKey(autoGenerate = true)
     var taskId: Long = 0L,
 

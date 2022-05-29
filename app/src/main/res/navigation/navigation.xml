@@ -2,56 +2,19 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/navigation"
-    app:startDestination="@id/taskListFragment">
-
+    android:id="@+id/navigation.xml"
+    app:startDestination="@+id/taskListFragment">
     <fragment
         android:id="@+id/taskListFragment"
-        android:name="com.example.tasks.ui.TaskListFragment"
-        android:label="fragment_task_list"
-        tools:layout="@layout/fragment_task_list" >
-        <action
-            android:id="@+id/action_tasksFragment_to_addTaskFragment"
-            app:destination="@id/addTaskFragment"
-            app:popUpTo="@id/taskListFragment"
-            app:popUpToInclusive="false" />
-        <action
-            android:id="@+id/action_tasksFragment_to_editTaskFragment"
-            app:destination="@id/editTaskFragment"
-            app:popUpTo="@id/taskListFragment"
-            app:popUpToInclusive="false" />
+        android:name="com.example.tasks.ui.fragment.TaskListFragment"
+        android:label="TaskListFragment">
     </fragment>
     <fragment
-        android:id="@+id/calendarFragment"
-        android:name="com.example.tasks.ui.CalendarFragment"
-        android:label="fragment_calendar"
-        tools:layout="@layout/fragment_calendar" />
+        android:id="@+id/taskAddFragment"
+        android:name="com.example.tasks.ui.fragment.TaskAddFragment"
+        android:label="fragment_task_add" />
     <fragment
-        android:id="@+id/statsFragment"
-        android:name="com.example.tasks.ui.StatsFragment"
-        android:label="fragment_stats"
-        tools:layout="@layout/fragment_stats" />
-    <fragment
-        android:id="@+id/addTaskFragment"
-        android:name="com.example.tasks.ui.AddTaskFragment"
-        android:label="fragment_add_task"
-        tools:layout="@layout/modify_task" >
-        <action
-            android:id="@+id/action_addTaskFragment_to_tasksFragment"
-            app:destination="@id/taskListFragment"
-            app:popUpTo="@id/taskListFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/editTaskFragment"
-        android:name="com.example.tasks.ui.EditTaskFragment"
-        android:label="fragment_edit_task"
-        tools:layout="@layout/modify_task" >
-        <action
-            android:id="@+id/action_editTaskFragment_to_tasksFragment"
-            app:destination="@id/taskListFragment"
-            app:popUpTo="@id/taskListFragment" />
-        <argument
-            android:name="task_id"
-            app:argType="long" />
-    </fragment>
+        android:id="@+id/taskEditFragment"
+        android:name="com.example.tasks.ui.fragment.TaskEditFragment"
+        android:label="fragment_task_edit"/>
 </navigation>
