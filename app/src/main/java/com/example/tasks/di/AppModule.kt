@@ -3,6 +3,8 @@ package com.example.tasks.di
 import android.content.Context
 import com.example.tasks.data.AppDatabase
 import com.example.tasks.data.TaskDao
+import com.example.tasks.ui.viewmodel.TaskAddViewModel
+import com.example.tasks.ui.viewmodel.TaskEditViewModel
 import com.example.tasks.ui.viewmodel.TaskListViewModel
 import dagger.Module
 import dagger.Provides
@@ -24,8 +26,4 @@ object AppModule {
     @Provides
     @Singleton
     fun provideTaskDao(db: AppDatabase) = db.taskDao
-
-    @Provides
-    @Singleton
-    fun provideTaskViewModel(dao: TaskDao) = TaskListViewModel(dao)
 }

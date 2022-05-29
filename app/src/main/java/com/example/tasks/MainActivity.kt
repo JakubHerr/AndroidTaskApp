@@ -8,26 +8,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.example.tasks.notifications.TaskReminder
-import com.example.tasks.ui.Navigation
-import com.example.tasks.ui.theme.TasksTheme
-import com.example.tasks.ui.viewmodel.TaskListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel: TaskListViewModel by viewModels()
-        setContent {
-            TasksTheme {
-                Navigation()
-            }
-        }
+        setContentView(R.layout.activity_main)
     }
 
     private fun scheduleNotification() {

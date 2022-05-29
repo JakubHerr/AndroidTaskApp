@@ -8,27 +8,46 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.tasks.R
 import com.example.tasks.data.Category
 import com.example.tasks.data.Task
 import com.example.tasks.extensions.toDeadline
-import com.example.tasks.ui.viewmodel.TaskListViewModel
+import com.example.tasks.ui.CustomTopAppBar
+import kotlinx.coroutines.flow.StateFlow
+
+sealed class TaskListEvent {
+    object SortByDeadline : TaskListEvent()
+    object SortByPriority : TaskListEvent()
+    object ShowCompleted : TaskListEvent()
+    object AddTask : TaskListEvent()
+    data class TaskCompleted(val id: Long) : TaskListEvent()
+}
 
 @Composable
-fun TaskList() {
-    val viewModel = hiltViewModel<TaskListViewModel>()
-    val categories = viewModel.categories.collectAsState()
-    LazyColumn {
-        items(categories.value.size) {
-            Category(categories.value[it], modifier = Modifier.padding(8.dp))
+fun TaskListScreen(categoryFlow: StateFlow<List<Category>>, onEvent: (TaskListEvent) -> Unit) {
+    val scaffoldState = rememberScaffoldState()
+    val categories = categoryFlow.collectAsState()
+
+    Scaffold(
+        scaffoldState = scaffoldState,
+        topBar = { CustomTopAppBar(screenName = stringResource(id = R.string.task_list)) },
+        floatingActionButtonPosition = FabPosition.End,
+        floatingActionButton = {
+            AddTaskFab { onEvent(TaskListEvent.AddTask) }
+        }
+    ) {
+        LazyColumn {
+            items(categories.value.size) {
+                Category(categories.value[it], onEvent, modifier = Modifier.padding(8.dp))
+            }
         }
     }
 }
 
 @Composable
-fun Category(category: Category, modifier: Modifier = Modifier) {
+fun Category(category: Category, onEvent: (TaskListEvent) -> Unit, modifier: Modifier = Modifier) {
     var isExpanded by remember { mutableStateOf(true) }
     val taskList = category.tasks.collectAsState()
 
@@ -65,9 +84,9 @@ fun Category(category: Category, modifier: Modifier = Modifier) {
             }
             Spacer(modifier = Modifier.size(2.dp))
             if (isExpanded) {
-                Column{
+                Column {
                     taskList.value.forEach {
-                        TaskItem(it)
+                        TaskItem(it, onEvent)
                     }
                 }
             }
@@ -76,17 +95,30 @@ fun Category(category: Category, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TaskItem(task: Task) {
-    val viewModel = hiltViewModel<TaskListViewModel>()
+fun TaskItem(task: Task, onEvent: (TaskListEvent) -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(checked = task.taskDone, onCheckedChange = {viewModel.completeTask(task.taskId)})
+            Checkbox(
+                checked = task.taskDone,
+                onCheckedChange = {
+                    onEvent(TaskListEvent.TaskCompleted(task.taskId))
+                })
             Text(task.taskName)
         }
         Text(text = task.deadline.timeInMillis.toDeadline(), modifier = Modifier.padding(8.dp))
+    }
+}
+
+@Composable
+fun AddTaskFab(onClick: () -> Unit) {
+    FloatingActionButton(onClick = { onClick() }) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_baseline_add_24),
+            contentDescription = "Add Task FAB"
+        )
     }
 }

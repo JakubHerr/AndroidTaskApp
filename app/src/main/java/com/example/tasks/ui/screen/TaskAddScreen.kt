@@ -16,17 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.example.tasks.R
 import com.example.tasks.data.Task
-import com.example.tasks.ui.viewmodel.TaskAddViewModel
-import com.example.tasks.ui.viewmodel.TaskListViewModel
 import java.util.*
 
 @Composable
-fun TaskAddScreen(navController: NavHostController) {
-    val viewModel = hiltViewModel<TaskAddViewModel>()
+fun TaskAddScreen(onTaskAdd: (Task) -> Unit, onCancel: () -> Unit) {
 
     var name by remember {
         mutableStateOf("")
@@ -46,16 +41,14 @@ fun TaskAddScreen(navController: NavHostController) {
         //add button
         Button(onClick = {
             task.taskName = name.ifBlank { "Untitled" }
-            viewModel.addTask(task)
-            navController.navigateUp()
+            onTaskAdd(task)
         }) {
             Text(text = stringResource(id = R.string.add_task))
         }
 
         //cancel button
         Button(onClick = {
-            //TODO alertDialog about unsaved changes
-            navController.navigateUp()
+            onCancel()
         }) {
             Text(text = stringResource(id = R.string.cancel_button))
         }

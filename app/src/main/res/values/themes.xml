@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.AndroidTaskApp" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/green</item>
+    <!-- Base application theme. -->
+    <style name="Theme.AndroidTaskApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" >@color/primaryColor</item>
     </style>
 </resources>
