@@ -20,12 +20,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.tasks.R
 import com.example.tasks.data.Task
-import com.example.tasks.ui.theme.viewmodel.TaskViewModel
+import com.example.tasks.ui.viewmodel.TaskAddViewModel
+import com.example.tasks.ui.viewmodel.TaskListViewModel
 import java.util.*
 
 @Composable
 fun TaskAddScreen(navController: NavHostController) {
-    val viewModel = hiltViewModel<TaskViewModel>()
+    val viewModel = hiltViewModel<TaskAddViewModel>()
 
     var name by remember {
         mutableStateOf("")

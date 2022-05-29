@@ -14,7 +14,7 @@ import androidx.activity.viewModels
 import com.example.tasks.notifications.TaskReminder
 import com.example.tasks.ui.Navigation
 import com.example.tasks.ui.theme.TasksTheme
-import com.example.tasks.ui.theme.viewmodel.TaskViewModel
+import com.example.tasks.ui.viewmodel.TaskListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -22,7 +22,7 @@ import java.util.*
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel: TaskViewModel by viewModels()
+        val viewModel: TaskListViewModel by viewModels()
         setContent {
             TasksTheme {
                 Navigation()

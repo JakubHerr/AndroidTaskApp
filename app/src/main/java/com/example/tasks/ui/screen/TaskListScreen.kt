@@ -14,11 +14,11 @@ import com.example.tasks.R
 import com.example.tasks.data.Category
 import com.example.tasks.data.Task
 import com.example.tasks.extensions.toDeadline
-import com.example.tasks.ui.theme.viewmodel.TaskViewModel
+import com.example.tasks.ui.viewmodel.TaskListViewModel
 
 @Composable
 fun TaskList() {
-    val viewModel = hiltViewModel<TaskViewModel>()
+    val viewModel = hiltViewModel<TaskListViewModel>()
     val categories = viewModel.categories.collectAsState()
     LazyColumn {
         items(categories.value.size) {
@@ -77,7 +77,7 @@ fun Category(category: Category, modifier: Modifier = Modifier) {
 
 @Composable
 fun TaskItem(task: Task) {
-    val viewModel = hiltViewModel<TaskViewModel>()
+    val viewModel = hiltViewModel<TaskListViewModel>()
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,

@@ -27,7 +27,7 @@ import com.example.tasks.Screen
 import com.example.tasks.ui.screen.TaskAddScreen
 import com.example.tasks.ui.screen.TaskEditScreen
 import com.example.tasks.ui.screen.TaskList
-import com.example.tasks.ui.theme.viewmodel.TaskViewModel
+import com.example.tasks.ui.viewmodel.TaskListViewModel
 
 @Preview(showBackground = true)
 @Composable
@@ -81,7 +81,7 @@ fun Navigation() {
 
 @Composable
 fun CustomTopAppBar(currentDestination: NavDestination?) {
-    val viewModel = hiltViewModel<TaskViewModel>()
+    val viewModel = hiltViewModel<TaskListViewModel>()
 
     TopAppBar(
         title = {
