@@ -21,7 +21,7 @@ class TaskListViewModel @Inject constructor(private val repository: TaskReposito
         }
     }
 
-    fun completeTask(taskId: Long) {
+    fun toggleTaskCompleted(taskId: Long) {
         viewModelScope.launch {
             repository.toggleTaskCompleted(taskId)
         }
@@ -31,5 +31,13 @@ class TaskListViewModel @Inject constructor(private val repository: TaskReposito
         viewModelScope.launch {
             repository.toggleCompletedCategory()
         }
+    }
+
+    fun selectDeadlineCategory() {
+        repository.selectDeadlineCategory()
+    }
+
+    fun selectPriorityCategory() {
+        repository.selectPriorityCategory()
     }
 }

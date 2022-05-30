@@ -14,22 +14,22 @@ import javax.inject.Inject
 class TaskRepositoryImpl @Inject constructor(private val dao: TaskDao) : TaskRepository {
     private val now = Clock.System.now().toEpochMilliseconds()
 
-    private val deadlineCategories = MutableStateFlow(mutableListOf(
+    private val deadlineCategories = mutableListOf(
         Category("Overdue", dao.getAllOverdueByDeadlineAsc(now)),
         Category("Future", dao.getAllFutureByDeadlineAsc(now)),
         Category("No deadline", dao.getAllWithoutDeadline()),
-    ))
+    )
 
-    private val priorityCategories = MutableStateFlow(mutableListOf(
+    private val priorityCategories = mutableListOf(
         Category("High", dao.getHighPriority()),
         Category("Medium", dao.getMediumPriority()),
         Category("Low", dao.getLowPriority()),
         Category("No", dao.getNoPriority()),
-    ))
+    )
 
     private val completed = Category("Completed", dao.getAllCompleted())
 
-    private val selectedCategory = deadlineCategories
+    private val selectedCategory = MutableStateFlow(priorityCategories)
 
     private val mutex = Mutex()
 
@@ -61,6 +61,14 @@ class TaskRepositoryImpl @Inject constructor(private val dao: TaskDao) : TaskRep
             categories.addOrDelete(completed)
             selectedCategory.value = categories
         }
+    }
+
+    override fun selectDeadlineCategory() {
+        selectedCategory.value = deadlineCategories
+    }
+
+    override fun selectPriorityCategory() {
+        selectedCategory.value = priorityCategories
     }
 }
 

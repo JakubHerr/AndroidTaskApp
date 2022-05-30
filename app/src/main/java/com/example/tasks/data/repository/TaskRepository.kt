@@ -21,4 +21,8 @@ interface TaskRepository {
     fun getCategories() : StateFlow<List<Category>>
 
     suspend fun toggleCompletedCategory()
+
+    fun selectDeadlineCategory()
+
+    fun selectPriorityCategory()
 }
