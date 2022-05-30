@@ -35,6 +35,9 @@ class TaskListFragment : Fragment() {
                             is TaskListEvent.TaskCompleted -> {
                                 viewModel.completeTask(event.id)
                             }
+                            is TaskListEvent.ShowCompleted -> {
+                                viewModel.toggleCompletedCategory()
+                            }
                             else -> {}
                         }
                     }
