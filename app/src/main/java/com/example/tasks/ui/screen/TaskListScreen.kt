@@ -1,6 +1,10 @@
 package com.example.tasks.ui.screen
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -39,7 +43,14 @@ fun TaskListScreen(categories: MutableStateFlow<List<Category>>, onEvent: (TaskL
     ) {
         LazyColumn {
             items(categoryList.value.size) { idx ->
-                Category(category = categoryList.value[idx] , onEvent = onEvent, modifier = Modifier.padding(8.dp))
+                //Categories get don't get created but recomposed/recycled on sorting change
+                //this results in isExpanded being remembered when it should not
+                //TODO try to fix
+                Category(
+                    category = categoryList.value[idx],
+                    onEvent = onEvent,
+                    modifier = Modifier.padding(8.dp)
+                )
             }
         }
     }
