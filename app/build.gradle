@@ -82,6 +82,8 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1'
+    //Number picker
+    implementation "com.chargemap.compose:numberpicker:1.0.3"
 
     //Kotlin datetime
     implementation('org.jetbrains.kotlinx:kotlinx-datetime:0.3.3')

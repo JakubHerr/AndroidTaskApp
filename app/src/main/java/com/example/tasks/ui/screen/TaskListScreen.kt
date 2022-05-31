@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.example.tasks.R
 import com.example.tasks.data.Category
 import com.example.tasks.data.Task
+import com.example.tasks.extensions.format
 import kotlinx.coroutines.flow.MutableStateFlow
 
 sealed class TaskListEvent {
@@ -115,7 +116,7 @@ fun TaskItem(task: Task, onEvent: (TaskListEvent) -> Unit) {
                 })
             Text(task.taskName)
         }
-        Text(text = task.deadline?.toString() ?: "No deadline", modifier = Modifier.padding(8.dp))
+        Text(text = task.deadline?.format() ?: "No deadline", modifier = Modifier.padding(8.dp))
     }
 }
 
