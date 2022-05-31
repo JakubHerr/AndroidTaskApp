@@ -23,7 +23,7 @@ class TaskListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         return ComposeView(requireContext()).apply {
             setContent {
@@ -35,6 +35,11 @@ class TaskListFragment : Fragment() {
                             }
                             is TaskListEvent.TaskCompleted -> {
                                 viewModel.toggleTaskCompleted(event.id)
+                            }
+                            is TaskListEvent.ShowTaskDetail -> {
+                                val action = TaskListFragmentDirections
+                                    .actionTaskListFragmentToTaskEditFragment(event.id)
+                                findNavController().navigate(action)
                             }
                             is TaskListEvent.ShowCompleted -> {
                                 viewModel.toggleCompletedCategory()

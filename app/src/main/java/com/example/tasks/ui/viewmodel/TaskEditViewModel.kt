@@ -12,9 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TaskEditViewModel @Inject constructor(private val dao: TaskDao) : ViewModel() {
-    fun retrieveTask(taskId: Long): Flow<Task> {
-        return dao.get(taskId)
-    }
+    fun retrieveTask(taskId: Long): Flow<Task> = dao.get(taskId)
 
     fun deleteTask(task: Task) {
         Log.d("TaskViewModel", "deleted task with id ${task.taskId}")
