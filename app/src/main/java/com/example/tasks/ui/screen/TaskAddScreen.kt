@@ -15,8 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.tasks.R
 import com.example.tasks.data.Task
-import com.example.tasks.extensions.toDeadline
-import java.util.*
+import kotlinx.datetime.*
 
 enum class TaskPriority {
     NO, LOW, MEDIUM, HIGH
@@ -44,6 +43,7 @@ fun TaskAddScreen(onTaskAdd: (Task) -> Unit, onCancel: () -> Unit) {
         ) {
             TextField(
                 modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
                 value = name,
                 onValueChange = { name = it },
                 label = { Text(stringResource(id = R.string.task_name_prompt)) })
@@ -79,6 +79,8 @@ fun TaskAddScreen(onTaskAdd: (Task) -> Unit, onCancel: () -> Unit) {
 @Composable
 private fun DeadlineButton(task: Task) {
     val context = LocalContext.current
+    val offsetTimeZone = TimeZone.currentSystemDefault()
+
     Button(onClick = {
         Log.d("DatePicker", "Date Picker button pressed")
         val dialog = DatePickerDialog(context)
@@ -87,18 +89,14 @@ private fun DeadlineButton(task: Task) {
             Log.d("DatePicker", "date set to $dayOfMonth/$month/$year")
             val listener = OnTimeSetListener { _, hourOfDay, minute ->
                 Log.d("TimePicker", "Time set to $hourOfDay:$minute")
-                val deadline = Calendar
-                    .Builder()
-                    .setDate(year, month, dayOfMonth)
-                    .setTimeOfDay(hourOfDay, minute, 0)
-                    .build()
-                task.deadline = deadline
+                //zero indexed month meets one indexed month
+                task.deadline = LocalDateTime(year, month+1, dayOfMonth, hourOfDay, minute)
+                task.timezone = offsetTimeZone
             }
             TimePickerDialog(context, listener, 12, 0, true).show()
         }
         dialog.setOnDismissListener {
-            task.deadline =
-                Calendar.Builder().setDate(1970, 1, 1).setTimeOfDay(0, 0, 0).build()
+            task.deadline = null
         }
 
         dialog.show()
@@ -108,13 +106,8 @@ private fun DeadlineButton(task: Task) {
             contentDescription = stringResource(
                 id = R.string.time_picker_description
             )
-        )
-        Text(
-            //does not work yet, function has no State and does not recompose
-            if (task.deadline.timeInMillis != 0L) task.deadline.timeInMillis.toDeadline() else stringResource(
-                id = R.string.no_date_selected
-            )
-        )
+        )//TODO format date
+        Text(task.deadline?.toString() ?: stringResource(id = R.string.no_date_selected))
     }
 }
 

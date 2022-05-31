@@ -9,10 +9,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import javax.inject.Inject
 
 class TaskRepositoryImpl @Inject constructor(private val dao: TaskDao) : TaskRepository {
-    private val now = Clock.System.now().toEpochMilliseconds()
+    private val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
     private val deadlineCategories = mutableListOf(
         Category("Overdue", dao.getAllOverdueByDeadlineAsc(now)),
@@ -29,7 +31,7 @@ class TaskRepositoryImpl @Inject constructor(private val dao: TaskDao) : TaskRep
 
     private val completed = Category("Completed", dao.getAllCompleted())
 
-    private val selectedCategory = MutableStateFlow(priorityCategories)
+    private val selectedCategory = MutableStateFlow(deadlineCategories)
 
     private val mutex = Mutex()
 

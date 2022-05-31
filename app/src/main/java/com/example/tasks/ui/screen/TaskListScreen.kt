@@ -1,10 +1,6 @@
 package com.example.tasks.ui.screen
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -13,11 +9,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tasks.R
 import com.example.tasks.data.Category
 import com.example.tasks.data.Task
-import com.example.tasks.extensions.toDeadline
 import kotlinx.coroutines.flow.MutableStateFlow
 
 sealed class TaskListEvent {
@@ -119,7 +115,7 @@ fun TaskItem(task: Task, onEvent: (TaskListEvent) -> Unit) {
                 })
             Text(task.taskName)
         }
-        Text(text = task.deadline.timeInMillis.toDeadline(), modifier = Modifier.padding(8.dp))
+        Text(text = task.deadline?.toString() ?: "No deadline", modifier = Modifier.padding(8.dp))
     }
 }
 

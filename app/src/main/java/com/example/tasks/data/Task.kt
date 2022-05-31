@@ -3,9 +3,10 @@ package com.example.tasks.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.*
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
 
-@Entity(tableName = "task_table")
+@Entity(tableName = "task")
 data class Task(
     @PrimaryKey(autoGenerate = true)
     var taskId: Long = 0L,
@@ -13,9 +14,10 @@ data class Task(
     @ColumnInfo(name = "task_name")
     var taskName: String = "",
 
-    //TODO use LocalDateTime with timezone offset instead
-    @ColumnInfo(name = "deadline")
-    var deadline: Calendar = Calendar.getInstance().apply { timeInMillis = 0L },
+    var deadline: LocalDateTime? = null,
+
+    @ColumnInfo(name = "timezone")
+    var timezone: TimeZone = TimeZone.UTC,
 
     @ColumnInfo(name = "time_estimate")
     var timeEstimate: Int = 0,
