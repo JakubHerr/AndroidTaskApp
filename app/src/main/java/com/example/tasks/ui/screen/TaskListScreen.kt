@@ -1,10 +1,7 @@
 package com.example.tasks.ui.screen
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -17,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.example.tasks.R
 import com.example.tasks.data.Category
 import com.example.tasks.data.Task
-import com.example.tasks.extensions.toDeadline
+import com.example.tasks.extensions.format
 import kotlinx.coroutines.flow.MutableStateFlow
 
 sealed class TaskListEvent {
@@ -26,6 +23,7 @@ sealed class TaskListEvent {
     object ShowCompleted : TaskListEvent()
     object AddTask : TaskListEvent()
     data class TaskCompleted(val id: Long) : TaskListEvent()
+    data class ShowTaskDetail(val id: Long) : TaskListEvent()
 }
 
 @Composable
@@ -117,9 +115,14 @@ fun TaskItem(task: Task, onEvent: (TaskListEvent) -> Unit) {
                 onCheckedChange = {
                     onEvent(TaskListEvent.TaskCompleted(task.taskId))
                 })
-            Text(task.taskName)
+            Text(
+                task.taskName,
+                modifier = Modifier.clickable(onClick = {
+                    onEvent(TaskListEvent.ShowTaskDetail(task.taskId))
+                })
+            )
         }
-        Text(text = task.deadline.timeInMillis.toDeadline(), modifier = Modifier.padding(8.dp))
+        Text(text = task.deadline?.format() ?: "No deadline", modifier = Modifier.padding(8.dp))
     }
 }
 

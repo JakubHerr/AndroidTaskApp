@@ -12,6 +12,9 @@ import com.example.tasks.notifications.TaskReminder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import java.util.*
 import javax.inject.Inject
 
@@ -32,7 +35,7 @@ class BootReceiver : BroadcastReceiver() {
             Log.d("Tasks BootReceiver","coroutine started successfully")
             val alarmManager = context.alarmManager()
 
-            val taskList = dao.getAllFuture(Calendar.getInstance().timeInMillis)
+            val taskList = dao.getAllFuture(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
             taskList.forEach { task ->
                 //create a pending intent for each task reminder
                 val intentNotification = Intent(context, TaskReminder::class.java)
@@ -45,7 +48,8 @@ class BootReceiver : BroadcastReceiver() {
                     intentNotification,
                     PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,task.deadline.timeInMillis,pendingIntent)
+                //TODO refactor with new Task field
+                //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,task.deadline.timeInMillis,pendingIntent)
                 Log.d("Tasks BootReceiver","exact alarm set for task nr. ${task.taskId} at ${task.deadline}")
             }
             if (taskList.isEmpty()) Log.d("Tasks BootReceiver","List of tasks was empty")

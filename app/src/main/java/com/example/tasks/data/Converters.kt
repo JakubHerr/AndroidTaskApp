@@ -1,14 +1,24 @@
 package com.example.tasks.data
 
 import androidx.room.TypeConverter
-import java.util.*
+import kotlinx.datetime.*
 
 class Converters {
     @TypeConverter
-    fun calendarToTimestamp(calendar: Calendar) : Long = calendar.timeInMillis
+    fun fromLocalDateTime(date: LocalDateTime?): String? = when(date) {
+        null -> null
+        else -> date.toString()
+    }
 
     @TypeConverter
-    fun timestampToCalendar(ts: Long) : Calendar = Calendar.getInstance().apply {
-        timeInMillis = ts
+    fun toLocalDateTime(isoString: String?): LocalDateTime? = when(isoString) {
+        null -> null
+        else -> LocalDateTime.parse(isoString)
     }
+
+    @TypeConverter
+    fun fromTimeZone(tz: TimeZone): String = tz.id
+
+    @TypeConverter
+    fun toTimeZone(id: String): TimeZone = TimeZone.of(id)
 }
