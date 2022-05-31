@@ -1,15 +1,10 @@
 package com.example.tasks.ui.screen
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
-import android.app.TimePickerDialog.OnTimeSetListener
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -21,8 +16,14 @@ enum class TaskPriority {
     NO, LOW, MEDIUM, HIGH
 }
 
+sealed class TaskAddScreenEvent {
+    data class AddTask(val task: Task): TaskAddScreenEvent()
+    object Cancel: TaskAddScreenEvent()
+    data class SetDeadline(val task: Task): TaskAddScreenEvent()
+}
+
 @Composable
-fun TaskAddScreen(onTaskAdd: (Task) -> Unit, onCancel: () -> Unit) {
+fun TaskAddScreen(onEvent: (TaskAddScreenEvent) -> Unit) {
 
     var showDropdownMenu by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf("") }
@@ -31,7 +32,7 @@ fun TaskAddScreen(onTaskAdd: (Task) -> Unit, onCancel: () -> Unit) {
     Scaffold(floatingActionButton = {
         SaveTaskFab {
             task.taskName = name.ifBlank { "Untitled" }
-            onTaskAdd(task)
+            onEvent(TaskAddScreenEvent.AddTask(task))
         }
     }, floatingActionButtonPosition = FabPosition.End) {
 
@@ -41,22 +42,17 @@ fun TaskAddScreen(onTaskAdd: (Task) -> Unit, onCancel: () -> Unit) {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextField(
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                value = name,
-                onValueChange = { name = it },
-                label = { Text(stringResource(id = R.string.task_name_prompt)) })
+            TaskNameField(name) { input -> name = input}
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 //deadline button
-                DeadlineButton(task)
+                DeadlineButton(task, onEvent)
 
                 //cancel button
                 Button(onClick = {
-                    onCancel()
+                    onEvent(TaskAddScreenEvent.Cancel)
                 }) {
                     Text(text = stringResource(id = R.string.cancel_button))
                 }
@@ -77,30 +73,8 @@ fun TaskAddScreen(onTaskAdd: (Task) -> Unit, onCancel: () -> Unit) {
 
 //TODO refactor with Material2 components
 @Composable
-private fun DeadlineButton(task: Task) {
-    val context = LocalContext.current
-    val offsetTimeZone = TimeZone.currentSystemDefault()
-
-    Button(onClick = {
-        Log.d("DatePicker", "Date Picker button pressed")
-        val dialog = DatePickerDialog(context)
-
-        dialog.setOnDateSetListener { _, year, month, dayOfMonth ->
-            Log.d("DatePicker", "date set to $dayOfMonth/$month/$year")
-            val listener = OnTimeSetListener { _, hourOfDay, minute ->
-                Log.d("TimePicker", "Time set to $hourOfDay:$minute")
-                //zero indexed month meets one indexed month
-                task.deadline = LocalDateTime(year, month+1, dayOfMonth, hourOfDay, minute)
-                task.timezone = offsetTimeZone
-            }
-            TimePickerDialog(context, listener, 12, 0, true).show()
-        }
-        dialog.setOnDismissListener {
-            task.deadline = null
-        }
-
-        dialog.show()
-    }) {
+private fun DeadlineButton(task: Task, onEvent: (TaskAddScreenEvent) -> Unit) {
+    Button(onClick = {onEvent(TaskAddScreenEvent.SetDeadline(task))}) {
         Icon(
             painter = painterResource(id = R.drawable.ic_baseline_calendar_month_24),
             contentDescription = stringResource(
@@ -137,4 +111,14 @@ private fun SaveTaskFab(onClick: () -> Unit) {
             contentDescription = "Save task"
         )
     }
+}
+
+@Composable
+fun TaskNameField(name: String, onValueChange: (String) -> Unit) {
+    TextField(
+        modifier = Modifier.fillMaxWidth(),
+        singleLine = true,
+        value = name,
+        onValueChange = { onValueChange(it) },
+        label = { Text(stringResource(id = R.string.task_name_prompt)) })
 }
